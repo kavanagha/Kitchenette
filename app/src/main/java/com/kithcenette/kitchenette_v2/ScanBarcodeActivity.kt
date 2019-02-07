@@ -39,9 +39,9 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         setContentView(R.layout.activity_scan_barcode)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+          val intent = Intent(this@ScanBarcodeActivity, BarcodeHistoryActivity::class.java)
+            startActivity(intent)
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -66,14 +66,13 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 if(barcodes!!.size()>0){
                     tvBarcode.post{
                         tvBarcode.text= barcodes.valueAt(0).displayValue
-                    }
-                    if (tvBarcode.text.isNotEmpty()) {
-                        var barcode = Barcodes(tvBarcode.text.toString().toInt())
+
+
+                        /*var barcode = Barcodes(tvBarcode.text.toString().toInt())
                         var barcodeNum = tvBarcode.text.toString().toInt()
-                        if(!db.checkBarcode(barcodeNum))
+                        if(!db.checkBarcode(barcodeNum)){
                             db.insertBarcode(barcode)
-                    } else {
-                        Toast.makeText(context, "Barcode already in database", Toast.LENGTH_SHORT).show()
+                        }*/
                     }
                 }
             }

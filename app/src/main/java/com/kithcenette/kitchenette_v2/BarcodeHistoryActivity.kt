@@ -7,27 +7,24 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import kotlinx.android.synthetic.main.activity_search_food.*
-import kotlinx.android.synthetic.main.app_bar_search_food.*
-import kotlinx.android.synthetic.main.content_search_food.*
+import kotlinx.android.synthetic.main.activity_barcode_history.*
+import kotlinx.android.synthetic.main.app_bar_barcode_history.*
+import kotlinx.android.synthetic.main.content_barcode_history.*
 
-class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val FoodList : ArrayList<String> = ArrayList()
-
+    val BarcodeList : ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_food)
+        setContentView(R.layout.activity_barcode_history)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener {
-            val intent = Intent(this@SearchFoodActivity, AddFoodActivity::class.java)
-            startActivity(intent)
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -38,26 +35,17 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        var message:String?
+        val context = this
+        var db = DataBaseHandler(context)
 
-        addFoodItems()
-        foodItem.layoutManager = LinearLayoutManager(this)
-        foodItem.adapter = FoodAdapter(FoodList, this)
-        foodItem.addOnItemTouchListener(
-            RecyclerItemClickListener(
-                this@SearchFoodActivity,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        message = FoodList[position]
-                        val intent = Intent(this@SearchFoodActivity, FoodItemActivity::class.java)
-                        intent.putExtra("food", message)
-                        startActivity(intent)
-                    }
-                })
-        )
-
+        var data = db.readBarcodeData()
+        view_barcode.text=""
+        for(i in 0..(data.size-1)){
+            view_barcode.append(data[i].id.toString() + " " + data[i].barcode.toString() +  "\n")
+        }
     }
 
+    //////////// NAV DRAWER METHODS ///////////////////
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -68,7 +56,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.search_food, menu)
+        menuInflater.inflate(R.menu.barcode_history, menu)
         return true
     }
 
@@ -86,7 +74,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
-                val menuIntent = Intent(this@SearchFoodActivity, MainActivity::class.java)
+                val menuIntent = Intent(this@BarcodeHistoryActivity, MainActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
@@ -99,7 +87,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             }
             R.id.nav_barcode -> {
-                val menuIntent = Intent(this@SearchFoodActivity, ScanBarcodeActivity::class.java)
+                val menuIntent = Intent(this@BarcodeHistoryActivity, ScanBarcodeActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_share -> {
@@ -111,16 +99,16 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun addFoodItems()
+    //////////// VIEW BARCODE HISTORY METHODS ////////////////////////
+    fun addBarcodeItems()
     {
         val context = this
         var db = DataBaseHandler(context)
 
-        var data = db.readFoodData()
+        var data = db.readBarcodeData()
 
         for(i in 0..(data.size-1)){
-            FoodList.add(data.get(i).id.toString())
-            //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
+            BarcodeList.add(data.get(i).id.toString() + " " + data.get(i).barcode.toString() + "\n")
         }
     }
 }
