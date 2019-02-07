@@ -90,7 +90,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             }
             R.id.nav_shopping -> {
-
+                val menuIntent = Intent(this@SearchFoodActivity, ShoppingListActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
 

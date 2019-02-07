@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_shopping -> {
-
+                val menuIntent = Intent(this@MainActivity, ShoppingListActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
 

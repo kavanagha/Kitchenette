@@ -11,4 +11,7 @@
     <string name="title_activity_add_food">AddFoodActivity</string>
     <string name="title_activity_scan_barcode">ScanBarcodeActivity</string>
     <string name="title_activity_barcode_history">BarcodeHistoryActivity</string>
+    <string name="title_activity_shopping_list">ShoppingListActivity</string>
+
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
