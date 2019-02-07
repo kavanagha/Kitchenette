@@ -43,8 +43,8 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 categorySelected!!.isNotEmpty()
             ) {
                 var food = Food(foodName.text.toString(), categorySelected!!)
-                db.insertFood(food)
-                var message = food.id.toString()
+                var newID = db.insertFood(food)
+                var message = newID.toString()
                 val intent = Intent(this@AddFoodActivity, FoodItemActivity::class.java)
                 intent.putExtra("food", message)
                 startActivity(intent)

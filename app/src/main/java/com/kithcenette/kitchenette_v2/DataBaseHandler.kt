@@ -61,7 +61,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
 
     /////// FOOD TABLE //////////////
 
-    fun insertFood(food: Food) {
+    fun insertFood(food: Food) : Long? {
         val db = this.writableDatabase
 
         var cv = ContentValues()
@@ -69,11 +69,12 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         cv.put(COL_FOOD_CATEGORY, food.category)
 
         var result = db.insert(TABLE_FOOD,null,cv)
-        if(result == (-1).toLong()) {
+        return if(result == (-1).toLong()) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
-        }
-        else {
+            null
+        } else {
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+            result
         }
     }
 
