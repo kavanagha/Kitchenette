@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.google.android.gms.vision.barcode.Barcode
 import kotlinx.android.synthetic.main.activity_barcode_history.*
 import kotlinx.android.synthetic.main.app_bar_barcode_history.*
 import kotlinx.android.synthetic.main.content_barcode_history.*
@@ -35,14 +36,22 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        view_barcode.text="Barcodes Here"
+
+        /*
         val context = this
         var db = DataBaseHandler(context)
 
-        var data = db.readBarcodeData()
+        var bar = Barcodes(123456)
+        db.insertBarcode(bar)
+
+        var data: MutableList<Barcodes> = db.readBarcodeData()
         view_barcode.text=""
-        for(i in 0..(data.size-1)){
-            view_barcode.append(data[i].id.toString() + " " + data[i].barcode.toString() +  "\n")
-        }
+        if(data.isNotEmpty()){
+            for(i in 0..(data.size-1)){
+                view_barcode.append(data[i].id.toString() + " " + data[i].barcode.toString() +  "\n")
+            }
+        }*/
     }
 
     //////////// NAV DRAWER METHODS ///////////////////

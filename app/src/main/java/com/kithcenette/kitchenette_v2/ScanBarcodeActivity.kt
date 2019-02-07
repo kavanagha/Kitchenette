@@ -51,6 +51,8 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         val context = this
         var db = DataBaseHandler(context)
+        ///////////////////////////////////////////////
+        var barcodeNumber  = 0
 
         svBarcode = findViewById(R.id.sv_barcode)
         tvBarcode = findViewById(R.id.tv_barcode)
@@ -63,17 +65,22 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 if(barcode!!.size()>0){
                     tvBarcode.post{
                         tvBarcode.text= barcode.valueAt(0).displayValue
-
-
-                        /*var barcode = Barcodes(tvBarcode.text.toString().toInt())
-                        var barcodeNum = tvBarcode.text.toString().toInt()
-                        if(!db.checkBarcode(barcodeNum)){
-                            db.insertBarcode(barcode)
-                        }*/
                     }
+                    ////////////////////
+                    barcodeNumber = barcode.valueAt(0).format
                 }
             }
         })
+        //////////////////////////////////////
+        if (barcodeNumber > 0 )
+        {
+            var barcode = Barcodes(barcodeNumber)
+            db.insertBarcode(barcode)
+        }
+        /*var barcodeNum = tvBarcode.text.toString().toInt()
+        if(!db.checkBarcode(barcodeNum)){
+            db.insertBarcode(dbBarcode)
+        }*/
 
         cameraSource = CameraSource.Builder(this, detector).setRequestedPreviewSize(1024,768)
             .setRequestedFps(25f).setAutoFocusEnabled(true).build()

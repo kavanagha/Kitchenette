@@ -152,14 +152,14 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         var list : MutableList<Barcodes> = ArrayList()
 
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_BARCODE"
+        val query = "SELECT * FROM " + TABLE_BARCODE
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
-                var barcodes = Barcodes()
-                barcodes.id = result.getString(result.getColumnIndex(COL_BARCODE_ID)).toInt()
-                barcodes.barcode = result.getString(result.getColumnIndex(COL_BARCODE_BARCODE)).toInt()
-                list.add(barcodes)
+                var barcode = Barcodes()
+                barcode.id = result.getString(result.getColumnIndex(COL_BARCODE_ID)).toInt()
+                barcode.barcode = result.getString(result.getColumnIndex(COL_BARCODE_BARCODE)).toInt()
+                list.add(barcode)
             }while (result.moveToNext())
         }
         result.close()
