@@ -30,14 +30,13 @@
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 android:hint="Food Name"/>
-        <EditText
+        <Spinner
                 android:id="@+id/foodCategory"
-                android:layout_weight="10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="20"
                 android:layout_margin="10dp"
-                android:padding="10dp"
-                android:hint="Category"/>
+                android:padding="10dp"/>
 
     </LinearLayout>
 

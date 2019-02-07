@@ -8,12 +8,22 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_food.*
 import kotlinx.android.synthetic.main.app_bar_add_food.*
 import kotlinx.android.synthetic.main.content_add_food.*
 
-class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    AdapterView.OnItemSelectedListener {
+
+    var categoryList = arrayOf("Dairy","Vegetables","Fruits","Baking & Grains",
+        "Sweeteners", "Spices & Seasonings","Meat","Seafood & Fish", "Condiments & Sauces",
+        "Oils","Beans & Legumes", "Alcohol","Stocks, Broths & Soups", "Nuts",
+        "Dairy Alternatives", "Deserts & Snacks", "Beverages", "Wheat")
+    var categorySelected : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +33,16 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val context = this
         var db = DataBaseHandler(context)
 
+        foodCategory!!.onItemSelectedListener = this
+        val aa = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryList)
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        foodCategory!!.adapter = aa
 
         fab.setOnClickListener {
             if (foodName.text.toString().isNotEmpty() &&
-                foodCategory.text.toString().isNotEmpty()
+                categorySelected!!.isNotEmpty()
             ) {
-                var food = Food(foodName.text.toString(), foodCategory.text.toString())
+                var food = Food(foodName.text.toString(), categorySelected!!)
                 db.insertFood(food)
                 var message = food.id.toString()
                 val intent = Intent(this@AddFoodActivity, FoodItemActivity::class.java)
@@ -38,11 +52,6 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 Toast.makeText(context, "Please Fill Out All details", Toast.LENGTH_SHORT).show()
             }
 
-            /*
-            foodName.setText("")
-            foodCategory.setText("")
-            foodQuantity.setText("")
-            foodMeasurement.setText("")*/
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -54,6 +63,8 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         nav_view.setNavigationItemSelectedListener(this)
 
     }
+
+    ///////////////NAV DRAWER METHODS //////////////////////
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -103,5 +114,14 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    ///////////////// SPINNER METHODS ///////////////////////////////
+    override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
+        categorySelected = categoryList[position]
+    }
+
+    override fun onNothingSelected(arg0: AdapterView<*>) {
+
     }
 }
