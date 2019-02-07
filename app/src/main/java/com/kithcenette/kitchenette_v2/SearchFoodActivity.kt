@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.content_search_food.*
 
 class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val FoodList : ArrayList<String> = ArrayList()
+    val list : ArrayList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,13 +42,13 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         addFoodItems()
         foodItem.layoutManager = LinearLayoutManager(this)
-        foodItem.adapter = FoodAdapter(FoodList, this)
+        foodItem.adapter = FoodAdapter(list, this)
         foodItem.addOnItemTouchListener(
             RecyclerItemClickListener(
                 this@SearchFoodActivity,
                 object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
-                        message = FoodList[position]
+                        message = list[position]
                         val intent = Intent(this@SearchFoodActivity, FoodItemActivity::class.java)
                         intent.putExtra("food", message)
                         startActivity(intent)
@@ -119,7 +119,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         var data = db.readFoodData()
 
         for(i in 0..(data.size-1)){
-            FoodList.add(data[i].id.toString())
+            list.add(data[i].id.toString())
             //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
         }
     }

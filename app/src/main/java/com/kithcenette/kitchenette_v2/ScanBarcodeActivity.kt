@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -24,8 +23,6 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_scan_barcode.*
 import kotlinx.android.synthetic.main.app_bar_scan_barcode.*
-import kotlinx.android.synthetic.main.content_add_food.*
-import kotlinx.android.synthetic.main.content_scan_barcode.*
 
 class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
