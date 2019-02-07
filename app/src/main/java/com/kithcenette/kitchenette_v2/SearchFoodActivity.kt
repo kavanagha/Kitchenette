@@ -76,9 +76,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -111,7 +111,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun addFoodItems()
+    private fun addFoodItems()
     {
         val context = this
         var db = DataBaseHandler(context)
@@ -119,7 +119,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         var data = db.readFoodData()
 
         for(i in 0..(data.size-1)){
-            FoodList.add(data.get(i).id.toString())
+            FoodList.add(data[i].id.toString())
             //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
         }
     }

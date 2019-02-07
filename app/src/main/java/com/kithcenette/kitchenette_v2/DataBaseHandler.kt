@@ -7,27 +7,27 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
 import java.util.ArrayList
 
-val DATABASE_NAME = "Kitchenette"
+const val DATABASE_NAME = "Kitchenette"
 
-val TABLE_FOOD = "food"
-val COL_FOOD_ID = "id"
-val COL_FOOD_NAME = "name"
-val COL_FOOD_CATEGORY = "category"
-val COL_FOOD_CUPBOARD = "cupboard"
-val COL_FOOD_FAVOURITE = "favourite"
-val COL_FOOD_SHOPPING = "shoppingList"
-val COL_FOOD_QUANTITY = "quantity"
-val COL_FOOD_MEASUREMENT = "measurement"
-val COL_FOOD_BOUGHT = "bought"
+const val TABLE_FOOD = "food"
+const val COL_FOOD_ID = "id"
+const val COL_FOOD_NAME = "name"
+const val COL_FOOD_CATEGORY = "category"
+const val COL_FOOD_CUPBOARD = "cupboard"
+const val COL_FOOD_FAVOURITE = "favourite"
+const val COL_FOOD_SHOPPING = "shoppingList"
+const val COL_FOOD_QUANTITY = "quantity"
+const val COL_FOOD_MEASUREMENT = "measurement"
+const val COL_FOOD_BOUGHT = "bought"
 
-val TABLE_BARCODE = "barcodes"
-val COL_BARCODE_ID = "id"
-val COL_BARCODE_BARCODE = "barcode"
-val COL_BARCODE_TYPE = "type"
-val COL_BARCODE_FOODID = "foodID"
-val COL_BARCODE_BRAND = "brand"
-val COL_BARCODE_QUANTITY = "quantity"
-val COL_BARCODE_MEASUREMENT = "measurement"
+const val TABLE_BARCODE = "barcodes"
+const val COL_BARCODE_ID = "id"
+const val COL_BARCODE_BARCODE = "barcode"
+const val COL_BARCODE_TYPE = "type"
+const val COL_BARCODE_FOODID = "foodID"
+const val COL_BARCODE_BRAND = "brand"
+const val COL_BARCODE_QUANTITY = "quantity"
+const val COL_BARCODE_MEASUREMENT = "measurement"
 
 
 class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
@@ -69,7 +69,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         cv.put(COL_FOOD_CATEGORY, food.category)
 
         var result = db.insert(TABLE_FOOD,null,cv)
-        if(result == -1.toLong()) {
+        if(result == (-1).toLong()) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         }
         else {
@@ -81,15 +81,15 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         var list : MutableList<Food> = ArrayList()
 
         val db = this.readableDatabase
-        val query = "SELECT * FROM " + TABLE_FOOD
+        val query = "SELECT * FROM $TABLE_FOOD"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
                 var food = Food()
                 food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
                 food.name = result.getString(result.getColumnIndex(COL_FOOD_NAME))
-                food.quantity = result.getString(result.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
-                food.measurement = result.getString(result.getColumnIndex(COL_FOOD_MEASUREMENT))
+                //food.quantity = result.getString(result.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
+                //food.measurement = result.getString(result.getColumnIndex(COL_FOOD_MEASUREMENT))
                 list.add(food)
             }while (result.moveToNext())
         }
@@ -125,7 +125,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         cv.put(COL_BARCODE_BARCODE, barcode.barcode)
 
         var result = db.insert(TABLE_BARCODE,null,cv)
-        if(result == -1.toLong()) {
+        if(result == (-1).toLong()) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         }
         else {
@@ -152,7 +152,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         var list : MutableList<Barcodes> = ArrayList()
 
         val db = this.readableDatabase
-        val query = "SELECT * FROM " + TABLE_BARCODE
+        val query = "SELECT * FROM $TABLE_BARCODE"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {

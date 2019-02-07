@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.content_barcode_history.*
 
 class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val BarcodeList : ArrayList<String> = ArrayList()
+    private val list : ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +61,9 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -108,7 +105,7 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         var data = db.readBarcodeData()
 
         for(i in 0..(data.size-1)){
-            BarcodeList.add(data.get(i).id.toString() + " " + data.get(i).barcode.toString() + "\n")
+            list.add(data[i].id.toString() + " " + data[i].barcode.toString() + "\n")
         }
     }
 }

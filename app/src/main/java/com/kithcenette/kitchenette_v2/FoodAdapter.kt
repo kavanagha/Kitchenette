@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.food_list_item.view.*
 
 
-class FoodAdapter(val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+class FoodAdapter(private val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
@@ -26,12 +26,12 @@ class FoodAdapter(val items : ArrayList<String>, val context: Context) : Recycle
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         var db = DataBaseHandler(context)
 
-        var food : Food? = db.findFood(items.get(position).toInt())
+        var food : Food? = db.findFood(items[position].toInt())
 
         holder?.tvFoodItem?.text = food?.name
     }
 }
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-    val tvFoodItem = view.tv_food
+    val tvFoodItem = view.tv_food!!
 }

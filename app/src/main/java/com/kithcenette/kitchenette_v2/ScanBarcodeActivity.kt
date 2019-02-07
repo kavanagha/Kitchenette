@@ -62,10 +62,10 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         detector.setProcessor(object: Detector.Processor<Barcode>{
             override fun release() { }
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
-                val barcodes =detections?.detectedItems
-                if(barcodes!!.size()>0){
+                val barcode =detections?.detectedItems
+                if(barcode!!.size()>0){
                     tvBarcode.post{
-                        tvBarcode.text= barcodes.valueAt(0).displayValue
+                        tvBarcode.text= barcode.valueAt(0).displayValue
 
 
                         /*var barcode = Barcodes(tvBarcode.text.toString().toInt())
@@ -115,12 +115,9 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

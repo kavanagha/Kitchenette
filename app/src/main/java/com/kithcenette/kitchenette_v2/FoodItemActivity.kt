@@ -42,8 +42,8 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         var food : Food? = db.findFood(foodMessage.toInt())
 
-        foodName.setText(food?.name)
-        foodItem_category.setText(food?.category)
+        foodName.text = food?.name
+        foodItem_category.text = food?.category
 
     }
 
@@ -62,12 +62,9 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
