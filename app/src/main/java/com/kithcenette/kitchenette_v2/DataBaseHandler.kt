@@ -20,11 +20,20 @@ val COL_FOOD_QUANTITY = "quantity"
 val COL_FOOD_MEASUREMENT = "measurement"
 val COL_FOOD_BOUGHT = "bought"
 
+val TABLE_BARCODE = "barcodes"
+val COL_BARCODE_ID = "id"
+val COL_BARCODE_BARCODE = "barcode"
+val COL_BARCODE_TYPE = "type"
+val COL_BARCODE_FOODID = "foodID"
+val COL_BARCODE_BRAND = "brand"
+val COL_BARCODE_QUANTITY = "quantity"
+val COL_BARCODE_MEASUREMENT = "measurement"
+
 
 class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTable = "CREATE TABLE " + TABLE_FOOD + " (" +
+        val createFoodTable = "CREATE TABLE " + TABLE_FOOD + " (" +
                 COL_FOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_FOOD_NAME + " varchar(256),  " +
                 COL_FOOD_CATEGORY + " varchar(256), " +
@@ -34,13 +43,23 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
                 COL_FOOD_QUANTITY + " INTEGER, "  +
                 COL_FOOD_MEASUREMENT + " varchar(256), " +
                 COL_FOOD_BOUGHT + " INTEGER DEFAULT 0)";
+        db?.execSQL(createFoodTable)
 
-        db?.execSQL(createTable)
+        val createBarcodeTable = "CREATE TABLE " + TABLE_BARCODE + " ("+
+                COL_BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_BARCODE_BARCODE + " INTEGER, " +
+                COL_BARCODE_FOODID + " INTEGER, " +
+                COL_BARCODE_BRAND + " VARCHAR(256), " +
+                COL_BARCODE_QUANTITY + " INTEGER, " +
+                COL_BARCODE_MEASUREMENT + " VARCHAR(256) )";
+        db?.execSQL(createBarcodeTable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    /////// FOOD TABLE //////////////
 
     fun insertFood(food: Food) {
         val db = this.writableDatabase
@@ -48,8 +67,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         var cv = ContentValues()
         cv.put(COL_FOOD_NAME, food.name)
         cv.put(COL_FOOD_CATEGORY, food.category)
-        cv.put(COL_FOOD_QUANTITY, food.quantity)
-        cv.put(COL_FOOD_MEASUREMENT, food.measurement)
+
         var result = db.insert(TABLE_FOOD,null,cv)
         if(result == -1.toLong()) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
@@ -59,7 +77,7 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         }
     }
 
-    fun readData() : MutableList<Food>{
+    fun readFoodData() : MutableList<Food>{
         var list : MutableList<Food> = ArrayList()
 
         val db = this.readableDatabase
@@ -70,7 +88,8 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
                 var food = Food()
                 food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
                 food.name = result.getString(result.getColumnIndex(COL_FOOD_NAME))
-
+                food.quantity = result.getString(result.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
+                food.measurement = result.getString(result.getColumnIndex(COL_FOOD_MEASUREMENT))
                 list.add(food)
             }while (result.moveToNext())
         }
@@ -97,4 +116,35 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         return null
     }
 
+    //////// BARCODE TABLE ////////////////
+
+    fun insertBarcode(barcode: Barcodes){
+        val db = this.writableDatabase
+
+        var cv = ContentValues()
+        cv.put(COL_BARCODE_BARCODE, barcode.barcode)
+
+        var result = db.insert(TABLE_BARCODE,null,cv)
+        if(result == -1.toLong()) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun checkBarcode(barcode:Int) : Boolean{
+
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_BARCODE + " WHERE " +
+                COL_BARCODE_BARCODE + " = ?"
+
+        db.rawQuery(query, arrayOf(barcode.toString())).use{
+            if(it.count > 0)
+                return true
+        }
+        db.close()
+        return false
+    }
 }

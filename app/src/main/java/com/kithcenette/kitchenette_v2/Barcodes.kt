@@ -9,14 +9,8 @@ class Barcodes{
     var quantity:Int = 0
     var measurement: String = ""
 
-    constructor(barcode:Int, type:String, foodID:Int, brand:String,
-                quantity:Int, measurement:String){
+    constructor(barcode:Int){
         this.barcode= barcode
-        this.type=type
-        this.foodID= foodID
-        this.brand= brand
-        this.quantity=quantity
-        this.measurement=measurement
     }
 
     constructor(){}

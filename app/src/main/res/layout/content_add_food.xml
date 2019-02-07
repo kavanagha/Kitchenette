@@ -38,22 +38,7 @@
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 android:hint="Category"/>
-        <EditText
-                android:id="@+id/foodQuantity"
-                android:layout_weight="10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:padding="10dp"
-                android:hint="Quantity"/>
-        <EditText
-                android:id="@+id/foodMeasurement"
-                android:layout_weight="10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:padding="10dp"
-                android:hint="Measurement"/>
+
     </LinearLayout>
 
 </LinearLayout>

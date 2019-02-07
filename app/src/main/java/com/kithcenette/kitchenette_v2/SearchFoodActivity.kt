@@ -118,7 +118,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val context = this
         var db = DataBaseHandler(context)
 
-        var data = db.readData()
+        var data = db.readFoodData()
 
         for(i in 0..(data.size-1)){
             FoodList.add(data.get(i).id.toString())

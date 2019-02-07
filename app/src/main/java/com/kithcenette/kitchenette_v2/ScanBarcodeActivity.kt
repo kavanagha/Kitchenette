@@ -24,6 +24,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_scan_barcode.*
 import kotlinx.android.synthetic.main.app_bar_scan_barcode.*
+import kotlinx.android.synthetic.main.content_add_food.*
 import kotlinx.android.synthetic.main.content_scan_barcode.*
 
 class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +52,9 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        val context = this
+        var db = DataBaseHandler(context)
+
         svBarcode = findViewById(R.id.sv_barcode)
         tvBarcode = findViewById(R.id.tv_barcode)
 
@@ -62,6 +66,14 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 if(barcodes!!.size()>0){
                     tvBarcode.post{
                         tvBarcode.text= barcodes.valueAt(0).displayValue
+                    }
+                    if (tvBarcode.text.isNotEmpty()) {
+                        var barcode = Barcodes(tvBarcode.text.toString().toInt())
+                        var barcodeNum = tvBarcode.text.toString().toInt()
+                        if(db.checkBarcode(barcodeNum) == false)
+                            db.insertBarcode(barcode)
+                    } else {
+                        Toast.makeText(context, "Barcode already in database", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -11,11 +11,10 @@ class Food {
     var measurement: String = ""
     var bought: Int = 0 //bool
 
-    constructor(name:String, category:String, quantity:Int, measurement:String){
+    constructor(name:String, category:String){
         this.name = name
         this.category = category
-        this.quantity = quantity
-        this.measurement = measurement
+
     }
 
     constructor(){}

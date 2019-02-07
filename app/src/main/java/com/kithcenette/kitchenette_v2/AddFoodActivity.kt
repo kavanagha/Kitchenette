@@ -27,12 +27,9 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         fab.setOnClickListener {
             if (foodName.text.toString().isNotEmpty() &&
-                foodCategory.text.toString().isNotEmpty() &&
-                foodQuantity.text.toString().isNotEmpty() &&
-                foodMeasurement.text.toString().isNotEmpty()
+                foodCategory.text.toString().isNotEmpty()
             ) {
-                var food = Food(foodName.text.toString(), foodCategory.text.toString(),
-                    foodQuantity.text.toString().toInt(), foodMeasurement.text.toString())
+                var food = Food(foodName.text.toString(), foodCategory.text.toString())
                 db.insertFood(food)
                 var message = food.id.toString()
                 val intent = Intent(this@AddFoodActivity, FoodItemActivity::class.java)
