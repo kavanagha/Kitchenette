@@ -70,7 +70,7 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                     if (tvBarcode.text.isNotEmpty()) {
                         var barcode = Barcodes(tvBarcode.text.toString().toInt())
                         var barcodeNum = tvBarcode.text.toString().toInt()
-                        if(db.checkBarcode(barcodeNum) == false)
+                        if(!db.checkBarcode(barcodeNum))
                             db.insertBarcode(barcode)
                     } else {
                         Toast.makeText(context, "Barcode already in database", Toast.LENGTH_SHORT).show()
