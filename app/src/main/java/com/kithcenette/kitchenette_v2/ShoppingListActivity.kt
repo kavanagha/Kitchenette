@@ -141,7 +141,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             savedInstanceState: Bundle?
         ): View? {
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
-            var foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+            val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
             if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
                 addShoppingItems()
 

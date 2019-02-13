@@ -55,7 +55,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
 
         favButton.setOnClickListener {
-            db.addFoodFavourites(food?.id!!)
+            db.addFoodFavourites(foodMessage.toInt())
         }
 
 

@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import kotlinx.android.synthetic.main.activity_favourites.*
 import kotlinx.android.synthetic.main.app_bar_favourites.*
@@ -134,18 +136,46 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
      */
     class PlaceholderFragment : Fragment() {
 
+        private val list : ArrayList<String> = ArrayList()
+
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
             val rootView = inflater.inflate(R.layout.content_favourites, container, false)
-
+            val favItem = rootView.findViewById(R.id.favItem) as RecyclerView
 
             if (arguments?.getInt(ARG_SECTION_NUMBER) == 1) {
-                rootView.section_label.text = "HEY"
-            } else
-                rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
+                addFoodItems()
+                favItem.layoutManager = LinearLayoutManager(activity)
+                favItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+                var message:String?
+                favItem.addOnItemTouchListener(
+                    RecyclerItemClickListener(activity!!.applicationContext,
+                        object : RecyclerItemClickListener.OnItemClickListener {
+                            override fun onItemClick(view: View, position: Int) {
+                                message = list[position]
+                                val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
+                                intent.putExtra("food", message)
+                                startActivity(intent)
+                            }
+                        })
+                )
+            }
+            /*else{
+                   //readRecipeFavourites()
+            }*/
             return rootView
+        }
+
+        private fun addFoodItems(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+
+            val data = db.readFoodFavourites()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
         }
 
         companion object {
@@ -159,8 +189,8 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int): ShoppingListActivity.PlaceholderFragment {
-                val fragment = ShoppingListActivity.PlaceholderFragment()
+            fun newInstance(sectionNumber: Int): FavouritesActivity.PlaceholderFragment {
+                val fragment = FavouritesActivity.PlaceholderFragment()
                 val args = Bundle()
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber)
                 fragment.arguments = args
