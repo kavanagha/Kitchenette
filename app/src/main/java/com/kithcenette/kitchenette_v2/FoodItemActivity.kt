@@ -41,7 +41,6 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         foodName.text = food?.name
         foodItem_category.text = food?.category
-        foodItem_inShopping.text = food?.shoppingList.toString()
 
         //////////////////////////////////// BUTTONS /////////////////////////////////////
 
@@ -58,6 +57,22 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             db.addFoodFavourites(foodMessage.toInt())
         }
 
+        removeShoppingButton.setOnClickListener {
+            db.removeFoodShopping(foodMessage.toInt())
+        }
+
+        addBought.setOnClickListener {
+            db.removeFoodShopping(foodMessage.toInt())
+            db.addFoodBought(foodMessage.toInt())
+        }
+
+        removeBought.setOnClickListener {
+            db.removeFoodBought(foodMessage.toInt())
+        }
+
+        removeFavourites.setOnClickListener {
+            db.removeFoodFavourites(foodMessage.toInt())
+        }
 
 
     }

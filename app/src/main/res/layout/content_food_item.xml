@@ -87,27 +87,46 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_marginTop="10dp">
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <Button
+                    android:id="@+id/removeShoppingButton"
+                    android:layout_weight="1"
                     android:layout_margin="10dp"
-                    android:layout_weight="1.2"
-                    android:id="@+id/foodItem_inShopping_label"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="In Shoping List:"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Shopping Remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Button
+                    android:id="@+id/removeFavourites"
+                    android:layout_weight="1"
                     android:layout_margin="10dp"
-                    android:layout_weight="0.8"
-                    android:id="@+id/foodItem_inShopping"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="0 or 1"/>
+                    android:padding="10dp"
+                    android:text="Favourites Remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+            <Button
+                    android:id="@+id/addBought"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:text="Bought Add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Button
+                    android:id="@+id/removeBought"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:text="Bought Remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
