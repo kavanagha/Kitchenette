@@ -30,6 +30,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             startActivity(intent)
         }
 
+        ////////////////// NAV DRAWER //////////////////////////////
+
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -37,6 +39,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        ////////////////// SET FOOD ITEMS ////////////////////////////
 
         var message:String?
 

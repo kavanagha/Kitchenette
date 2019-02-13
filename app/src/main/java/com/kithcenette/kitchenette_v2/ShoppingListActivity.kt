@@ -11,10 +11,12 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import kotlinx.android.synthetic.main.activity_shopping.*
 import kotlinx.android.synthetic.main.app_bar_shopping_list.*
-import kotlinx.android.synthetic.main.content_shopping_list.view.*
+import kotlinx.android.synthetic.main.content_shopping_list.*
 
 class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -109,6 +111,8 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         return true
     }
 
+
+
     ///////////////////// TAB ACTIVITY METHODS ////////////////////////
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -122,10 +126,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             return PlaceholderFragment.newInstance(position + 1)
         }
 
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 2
-        }
+        override fun getCount(): Int { return 2 }
     }
 
     /**
@@ -133,20 +134,62 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
      */
     class PlaceholderFragment : Fragment() {
 
+        private val list : ArrayList<String> = ArrayList()
+
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
+            var foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                addShoppingItems()
 
-
-            if(arguments?.getInt(ARG_SECTION_NUMBER)==1)
-            {
-                rootView.section_label.text = "HEY"
             }
-            else
-                rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
+            else{
+                addBoughtItems()
+            }
+
+            foodItem.layoutManager = LinearLayoutManager(activity)
+            foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+
+            var message:String?
+            foodItem.addOnItemTouchListener(
+                RecyclerItemClickListener(
+                    activity!!.applicationContext,
+                    object : RecyclerItemClickListener.OnItemClickListener {
+                        override fun onItemClick(view: View, position: Int) {
+                            message = list[position]
+                            val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
+                            intent.putExtra("food", message)
+                            startActivity(intent)
+                        }
+                    })
+            )
+
             return rootView
+        }
+
+        /////////////////////// FOOD LIST METHODS ////////////////////////////
+
+        private fun addShoppingItems() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+
+            val data = db.readShopping()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
+        }
+
+        private fun addBoughtItems() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+
+            val data = db.readBought()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
         }
 
         companion object {
@@ -167,8 +210,8 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 fragment.arguments = args
                 return fragment
             }
+
         }
     }
-
 
 }

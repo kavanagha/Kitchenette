@@ -120,7 +120,7 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return ShoppingListActivity.PlaceholderFragment.newInstance(position + 1)
+            return FavouritesActivity.PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
@@ -138,7 +138,7 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
-            val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
+            val rootView = inflater.inflate(R.layout.content_favourites, container, false)
 
 
             if (arguments?.getInt(ARG_SECTION_NUMBER) == 1) {

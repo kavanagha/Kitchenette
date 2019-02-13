@@ -24,21 +24,46 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher"/>
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/foodName"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:text="Food Name"
-                android:textSize="40sp"
-                android:textColor="#000"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3"
+                android:layout_marginTop="10dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/foodName"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Food Name"
+                    android:textSize="40sp"
+                    android:textColor="#000"
+                    android:layout_weight="2"/>
+            <ImageButton
+                    android:id="@+id/shoppingButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/ic_menu_shopping"
+                    android:background="@null"/>
+            <ImageButton
+                    android:id="@+id/favButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/ic_menu_favourite"
+                    android:background="@null"/>
+
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="10dp">
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,8 +83,34 @@
                     android:textColor="#000"
                     android:text="Category here"/>
 
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginTop="10dp">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1.2"
+                    android:id="@+id/foodItem_inShopping_label"
+                    android:textSize="20sp"
+                    android:textColor="#000"
+                    android:text="In Shoping List:"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="0.8"
+                    android:id="@+id/foodItem_inShopping"
+                    android:textSize="20sp"
+                    android:textColor="#000"
+                    android:text="0 or 1"/>
 
         </LinearLayout>
+
 
     </LinearLayout>
 

@@ -21,11 +21,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setContentView(R.layout.activity_food_item)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
+        ////////////////////////////////// NAV DRAWER ////////////////////////////////////////
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -34,16 +30,35 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        ///////////////////// SET FOOD ITEM /////////////////////////////////////////////////
 
         val context = this
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
-        var foodMessage: String = intent.getStringExtra("food")
+        val foodMessage: String = intent.getStringExtra("food")
 
-        var food : Food? = db.findFood(foodMessage.toInt())
+        val food : Food? = db.findFood(foodMessage.toInt())
 
         foodName.text = food?.name
         foodItem_category.text = food?.category
+        foodItem_inShopping.text = food?.shoppingList.toString()
+
+        //////////////////////////////////// BUTTONS /////////////////////////////////////
+
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+
+        shoppingButton.setOnClickListener {
+            db.addFoodShopping(foodMessage.toInt())
+        }
+
+        favButton.setOnClickListener {
+            db.addFoodFavourites(food?.id!!)
+        }
+
+
 
     }
 

@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import android.widget.Toast
 import java.util.ArrayList
 
@@ -89,8 +90,6 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
                 var food = Food()
                 food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
                 food.name = result.getString(result.getColumnIndex(COL_FOOD_NAME))
-                //food.quantity = result.getString(result.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
-                //food.measurement = result.getString(result.getColumnIndex(COL_FOOD_MEASUREMENT))
                 list.add(food)
             }while (result.moveToNext())
         }
@@ -99,22 +98,136 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         return list
     }
 
-    fun findFood(id : Int) : Food?
-    {
+    fun findFood(id : Int) : Food? {
         val db = this.readableDatabase
 
-        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
-                COL_FOOD_ID + " = ?"
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
         db.rawQuery(query, arrayOf(id.toString())).use{
                 if (it.moveToFirst()){
                         val food = Food()
                         food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
                         food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
+                        food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
                         return food
                 }
         }
         db.close()
         return null
+    }
+
+    fun addFoodShopping(id:Int) {
+        val db = this.writableDatabase
+
+        val cv = ContentValues()
+        cv.put(COL_FOOD_SHOPPING, "1")
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun removeFoodShopping(id:Int){
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
+                COL_FOOD_ID + " = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if(it.moveToFirst()){
+                var cv = ContentValues()
+                cv.put(COL_FOOD_SHOPPING, 0)
+            }
+        }
+        db.close()
+    }
+    fun readShopping():MutableList<Food>{
+        var list : MutableList<Food> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_SHOPPING =\"1\""
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                var food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
+    fun addFoodBought(id:Int){
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
+                COL_FOOD_ID + " = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if(it.moveToFirst()){
+                var cv = ContentValues()
+                cv.put(COL_FOOD_BOUGHT, 1)
+            }
+        }
+        db.close()
+    }
+    fun removeFoodBought(id:Int){
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
+                COL_FOOD_ID + " = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if(it.moveToFirst()){
+                var cv = ContentValues()
+                cv.put(COL_FOOD_BOUGHT, 0)
+            }
+        }
+        db.close()
+    }
+    fun readBought():MutableList<Food>{
+        var list : MutableList<Food> = ArrayList()
+
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_BOUGHT = 1"
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                var food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
+    fun addFoodFavourites(id:Int){
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
+                COL_FOOD_ID + " = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if(it.moveToFirst()){
+                var cv = ContentValues()
+                cv.put(COL_FOOD_FAVOURITE, 1)
+            }
+        }
+        db.close()
+    }
+    fun removeFoodFavourites(id:Int){
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_FOOD + " WHERE " +
+                COL_FOOD_ID + " = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if(it.moveToFirst()){
+                var cv = ContentValues()
+                cv.put(COL_FOOD_FAVOURITE, 0)
+            }
+        }
+        db.close()
     }
 
     //////// BARCODE TABLE ////////////////
