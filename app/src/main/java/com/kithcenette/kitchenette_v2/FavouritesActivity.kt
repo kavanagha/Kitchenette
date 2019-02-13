@@ -12,17 +12,18 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.*
-import kotlinx.android.synthetic.main.activity_shopping.*
-import kotlinx.android.synthetic.main.app_bar_shopping_list.*
-import kotlinx.android.synthetic.main.content_shopping_list.view.*
+import kotlinx.android.synthetic.main.activity_favourites.*
+import kotlinx.android.synthetic.main.app_bar_favourites.*
+import kotlinx.android.synthetic.main.content_favourites.view.*
 
-class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private var mSectionsPagerAdapter: ShoppingListActivity.SectionsPagerAdapter? = null
+class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var mSectionsPagerAdapter: FavouritesActivity.SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shopping)
+        setContentView(R.layout.activity_favourites)
         setSupportActionBar(toolbar)
 
         ///////////////////////////////////TAB ACTIVITY //////////////////////////////
@@ -52,11 +53,9 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-
-
     }
 
-    //////////////// NAVIGATION DRAWER METHODS ////////////////////////
+    ///////////////////// NAV DRAWER METHODS ////////////////////////
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -68,7 +67,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.shopping_list, menu)
+        menuInflater.inflate(R.menu.favourites, menu)
         return true
     }
 
@@ -83,21 +82,23 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
-                val menuIntent = Intent(this@ShoppingListActivity, MainActivity::class.java)
+                val menuIntent = Intent(this@FavouritesActivity, MainActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
 
             }
             R.id.nav_shopping -> {
-                val menuIntent = Intent(this@ShoppingListActivity, ShoppingListActivity::class.java)
+                val menuIntent = Intent(this@FavouritesActivity, ShoppingListActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
+                val menuIntent = Intent(this@FavouritesActivity, FavouritesActivity::class.java)
+                startActivity(menuIntent)
 
             }
             R.id.nav_barcode -> {
-                val menuIntent = Intent(this@ShoppingListActivity, ScanBarcodeActivity::class.java)
+                val menuIntent = Intent(this@FavouritesActivity, ScanBarcodeActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_share -> {
@@ -119,7 +120,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return ShoppingListActivity.PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
@@ -140,11 +141,9 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
 
 
-            if(arguments?.getInt(ARG_SECTION_NUMBER)==1)
-            {
+            if (arguments?.getInt(ARG_SECTION_NUMBER) == 1) {
                 rootView.section_label.text = "HEY"
-            }
-            else
+            } else
                 rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
             return rootView
         }
@@ -160,8 +159,8 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
+            fun newInstance(sectionNumber: Int): ShoppingListActivity.PlaceholderFragment {
+                val fragment = ShoppingListActivity.PlaceholderFragment()
                 val args = Bundle()
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber)
                 fragment.arguments = args
@@ -169,6 +168,4 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
         }
     }
-
-
 }

@@ -94,7 +94,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
-
+                val menuIntent = Intent(this@SearchFoodActivity, FavouritesActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_barcode -> {
                 val menuIntent = Intent(this@SearchFoodActivity, ScanBarcodeActivity::class.java)

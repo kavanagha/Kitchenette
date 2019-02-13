@@ -91,7 +91,8 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
-
+                val menuIntent = Intent(this@BarcodeHistoryActivity, FavouritesActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_barcode -> {
                 val menuIntent = Intent(this@BarcodeHistoryActivity, ScanBarcodeActivity::class.java)
