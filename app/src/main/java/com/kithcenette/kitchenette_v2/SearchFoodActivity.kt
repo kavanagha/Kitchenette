@@ -1,19 +1,25 @@
 package com.kithcenette.kitchenette_v2
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.ThemedSpinnerAdapter
+import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_search_food.*
 import kotlinx.android.synthetic.main.app_bar_search_food.*
 import kotlinx.android.synthetic.main.content_search_food.*
+import kotlinx.android.synthetic.main.list_item.view.*
 
 class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,12 +31,38 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setContentView(R.layout.activity_search_food)
         setSupportActionBar(toolbar)
 
+        //////////////////////////// TAB ACTIVITY /////////////////////////////////////
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Setup spinner
+        spinner.adapter = MyAdapter(
+            toolbar.context,
+            arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
+                "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
+                "Deserts & Snacks","Fruits","Meat","Nuts","Oils","Seafood & Fish",
+                "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+        )
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // When the given dropdown item is selected, show its contents in the
+                // container view.
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                    .commit()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        /////////////////////////// FLOATING BUTTON ////////////////////////////////
+
         fab.setOnClickListener {
             val intent = Intent(this@SearchFoodActivity, AddFoodActivity::class.java)
             startActivity(intent)
         }
 
-        ////////////////// NAV DRAWER //////////////////////////////
+        //////////////////////////// NAV DRAWER //////////////////////////////
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -40,28 +72,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        ////////////////// SET FOOD ITEMS ////////////////////////////
-
-        var message:String?
-
-        addFoodItems()
-        foodItem.layoutManager = LinearLayoutManager(this)
-        foodItem.adapter = FoodAdapter(list, this)
-        foodItem.addOnItemTouchListener(
-            RecyclerItemClickListener(
-                this@SearchFoodActivity,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        message = list[position]
-                        val intent = Intent(this@SearchFoodActivity, FoodItemActivity::class.java)
-                        intent.putExtra("food", message)
-                        startActivity(intent)
-                    }
-                })
-        )
-
     }
 
+    //////////////////////////// STANDARD METHODS ////////////////////////////////////
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -83,6 +96,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
+    //////////////////////////// NAV DRAWER METHODS ///////////////////////////////////
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -114,8 +128,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    private fun addFoodItems()
-    {
+    ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
+    private fun addFoodItems() {
         val context = this
         var db = DataBaseHandler(context)
 
@@ -124,6 +138,127 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         for(i in 0..(data.size-1)){
             list.add(data[i].id.toString())
             //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
+        }
+    }
+
+    ////////////////////////// TAB ACTIVITY METHODS ////////////////////////////////////
+    private class MyAdapter(context: Context, objects: Array<String>) :
+        ArrayAdapter<String>(context, R.layout.list_item, objects), ThemedSpinnerAdapter {
+        private val mDropDownHelper: ThemedSpinnerAdapter.Helper = ThemedSpinnerAdapter.Helper(context)
+
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view: View
+
+            view = if (convertView == null) {
+                // Inflate the drop down using the helper's LayoutInflater
+                val inflater = mDropDownHelper.dropDownViewInflater
+                inflater.inflate(R.layout.list_item, parent, false)
+            } else {
+                convertView
+            }
+
+            view.text1.text = getItem(position)
+
+            return view
+        }
+
+        override fun getDropDownViewTheme(): Resources.Theme? {
+            return mDropDownHelper.dropDownViewTheme
+        }
+
+        override fun setDropDownViewTheme(theme: Resources.Theme?) {
+            mDropDownHelper.dropDownViewTheme = theme
+        }
+    }
+
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    class PlaceholderFragment : Fragment() {
+
+        val list : ArrayList<String> = ArrayList()
+
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View? {
+            val rootView = inflater.inflate(R.layout.content_search_food, container, false)
+
+            val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+
+            if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
+                addAllFoodItems()
+
+                foodItem.layoutManager = LinearLayoutManager(activity)
+                foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+
+                var message:String?
+                foodItem.addOnItemTouchListener(
+                    RecyclerItemClickListener(
+                        activity!!.applicationContext,
+                        object : RecyclerItemClickListener.OnItemClickListener {
+                            override fun onItemClick(view: View, position: Int) {
+                                message = list[position]
+                                val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
+                                intent.putExtra("food", message)
+                                startActivity(intent)
+                            }
+                        })
+                )
+            }
+
+            foodItem.layoutManager = LinearLayoutManager(activity)
+            foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+
+            var message:String?
+            foodItem.addOnItemTouchListener(
+                RecyclerItemClickListener(
+                    activity!!.applicationContext,
+                    object : RecyclerItemClickListener.OnItemClickListener {
+                        override fun onItemClick(view: View, position: Int) {
+                            message = list[position]
+                            val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
+                            intent.putExtra("food", message)
+                            startActivity(intent)
+                        }
+                    })
+            )
+
+            return rootView
+        }
+
+        ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
+        private fun addAllFoodItems() {
+            val context = activity!!.applicationContext
+            var db = DataBaseHandler(context)
+
+            var data = db.readFoodData()
+
+            for(i in 0..(data.size-1)){
+                list.add(data[i].id.toString())
+                //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
+            }
+        }
+
+        companion object {
+            /**
+             * The fragment argument representing the section number for this
+             * fragment.
+             */
+            private val ARG_SECTION_NUMBER = "section_number"
+
+            /**
+             * Returns a new instance of this fragment for the given section
+             * number.
+             */
+            fun newInstance(sectionNumber: Int): PlaceholderFragment {
+                val fragment = PlaceholderFragment()
+                val args = Bundle()
+                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
+                fragment.arguments = args
+                return fragment
+            }
         }
     }
 }

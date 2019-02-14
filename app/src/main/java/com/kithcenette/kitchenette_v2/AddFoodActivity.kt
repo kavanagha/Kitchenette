@@ -19,10 +19,10 @@ import kotlinx.android.synthetic.main.content_add_food.*
 class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     AdapterView.OnItemSelectedListener {
 
-    var categoryList = arrayOf("Dairy","Vegetables","Fruits","Baking & Grains",
-        "Sweeteners", "Spices & Seasonings","Meat","Seafood & Fish", "Condiments & Sauces",
-        "Oils","Beans & Legumes", "Alcohol","Stocks, Broths & Soups", "Nuts",
-        "Dairy Alternatives", "Deserts & Snacks", "Beverages", "Wheat")
+    var categoryList = arrayOf("Baking & Grains","Beans & Legumes","Beverages",
+        "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
+        "Deserts & Snacks","Fruits","Meat","Nuts","Oils","Seafood & Fish",
+        "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
     var categorySelected : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
