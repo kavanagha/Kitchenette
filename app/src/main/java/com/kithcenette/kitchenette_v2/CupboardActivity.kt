@@ -41,7 +41,7 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         addFoodItems()
         foodItem.layoutManager = LinearLayoutManager(this)
-        foodItem.adapter = FoodAdapter(list, this)
+        foodItem.adapter = CupboardAdapter(list, this)
         foodItem.addOnItemTouchListener(
             RecyclerItemClickListener(
                 this@CupboardActivity,
