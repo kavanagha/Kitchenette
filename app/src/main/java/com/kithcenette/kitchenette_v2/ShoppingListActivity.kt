@@ -17,6 +17,7 @@ import android.view.*
 import kotlinx.android.synthetic.main.activity_shopping.*
 import kotlinx.android.synthetic.main.app_bar_shopping_list.*
 import kotlinx.android.synthetic.main.content_shopping_list.*
+import kotlinx.android.synthetic.main.shopping_list_item.*
 
 class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -151,18 +152,30 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             foodItem.layoutManager = LinearLayoutManager(activity)
-            foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+            foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
 
             var message:String?
+           // message = list[position]
+
             foodItem.addOnItemTouchListener(
                 RecyclerItemClickListener(
                     activity!!.applicationContext,
                     object : RecyclerItemClickListener.OnItemClickListener {
                         override fun onItemClick(view: View, position: Int) {
                             message = list[position]
-                            val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
-                            intent.putExtra("food", message)
-                            startActivity(intent)
+                            val context = activity!!.applicationContext
+                            val db = DataBaseHandler(context)
+
+                            check_shop.setOnClickListener {
+                                if (check_shop.isChecked) {
+                                    db.removeFoodShopping(list[position].toInt())
+                                    db.addFoodBought(list[position].toInt())
+                                }
+                            }
+
+                            //val intent = Intent(activity!!.applicationContext, ShoppingListActivity::class.java)
+                            //intent.putExtra("food", message)
+                            //startActivity(intent)
                         }
                     })
             )
