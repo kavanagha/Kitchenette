@@ -141,7 +141,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    ////////////////////////// TAB ACTIVITY METHODS ////////////////////////////////////
+    ////////////////////////// ADAPTER CLASS ////////////////////////////////////
     private class MyAdapter(context: Context, objects: Array<String>) :
         ArrayAdapter<String>(context, R.layout.list_item, objects), ThemedSpinnerAdapter {
         private val mDropDownHelper: ThemedSpinnerAdapter.Helper = ThemedSpinnerAdapter.Helper(context)
@@ -171,6 +171,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
+    ////////////////////////// FRAGMENT CLASS ////////////////////////////////////
 
     /**
      * A placeholder fragment containing a simple view.
@@ -184,28 +185,20 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             savedInstanceState: Bundle?
         ): View? {
             val rootView = inflater.inflate(R.layout.content_search_food, container, false)
-
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+            val categoryArray = arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
+                "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
+                "Deserts & Snacks","Fruits","Meat","Nuts","Oils","Seafood & Fish",
+                "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
 
             if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
                 addAllFoodItems()
+            }
+            else{
+                val position = (arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)!! -1)
+                val category = categoryArray[position]
 
-                foodItem.layoutManager = LinearLayoutManager(activity)
-                foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
-
-                var message:String?
-                foodItem.addOnItemTouchListener(
-                    RecyclerItemClickListener(
-                        activity!!.applicationContext,
-                        object : RecyclerItemClickListener.OnItemClickListener {
-                            override fun onItemClick(view: View, position: Int) {
-                                message = list[position]
-                                val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
-                                intent.putExtra("food", message)
-                                startActivity(intent)
-                            }
-                        })
-                )
+                addCategoryFoodItems(category)
             }
 
             foodItem.layoutManager = LinearLayoutManager(activity)
@@ -234,6 +227,17 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             var db = DataBaseHandler(context)
 
             var data = db.readFoodData()
+
+            for(i in 0..(data.size-1)){
+                list.add(data[i].id.toString())
+                //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
+            }
+        }
+        private fun addCategoryFoodItems(cat:String) {
+            val context = activity!!.applicationContext
+            var db = DataBaseHandler(context)
+
+            var data = db.readFoodCategory(cat)
 
             for(i in 0..(data.size-1)){
                 list.add(data[i].id.toString())

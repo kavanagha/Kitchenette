@@ -249,6 +249,25 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         return list
     }
 
+    fun readFoodCategory(cat:String):MutableList<Food>{
+        val list : MutableList<Food> = ArrayList()
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CATEGORY = \"$cat\""
+
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
     //////// BARCODE TABLE ////////////////
 
     fun insertBarcode(barcode: Barcodes){
