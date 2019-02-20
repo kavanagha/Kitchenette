@@ -143,66 +143,33 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         ): View? {
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
-            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
-                addShoppingItems()
 
+            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                //addShoppingItems()
+                val context = activity!!.applicationContext
+                val db = DataBaseHandler(context)
+                val data = db.readShopping()
+
+                for(i in 0..(data.size-1))
+                    list.add(data[i].id.toString())
+
+                foodItem.layoutManager = LinearLayoutManager(activity)
+                foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
             }
             else{
-                addBoughtItems()
+                //addBoughtItems()
+                val context = activity!!.applicationContext
+                val db = DataBaseHandler(context)
+                val data = db.readBought()
+
+                for(i in 0..(data.size-1))
+                    list.add(data[i].id.toString())
+
+                foodItem.layoutManager = LinearLayoutManager(activity)
+                foodItem.adapter = BoughtAdapter(list, activity!!.applicationContext)
             }
 
-            foodItem.layoutManager = LinearLayoutManager(activity)
-            foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
-
-            var message:String?
-           // message = list[position]
-
-            foodItem.addOnItemTouchListener(
-                RecyclerItemClickListener(
-                    activity!!.applicationContext,
-                    object : RecyclerItemClickListener.OnItemClickListener {
-                        override fun onItemClick(view: View, position: Int) {
-                            message = list[position]
-                            val context = activity!!.applicationContext
-                            val db = DataBaseHandler(context)
-
-                            check_shop.setOnClickListener {
-                                if (check_shop.isChecked) {
-                                    db.removeFoodShopping(list[position].toInt())
-                                    db.addFoodBought(list[position].toInt())
-                                }
-                            }
-
-                            //val intent = Intent(activity!!.applicationContext, ShoppingListActivity::class.java)
-                            //intent.putExtra("food", message)
-                            //startActivity(intent)
-                        }
-                    })
-            )
-
             return rootView
-        }
-
-        /////////////////////// FOOD LIST METHODS ////////////////////////////
-
-        private fun addShoppingItems() {
-            val context = activity!!.applicationContext
-            val db = DataBaseHandler(context)
-
-            val data = db.readShopping()
-
-            for(i in 0..(data.size-1))
-                list.add(data[i].id.toString())
-        }
-
-        private fun addBoughtItems() {
-            val context = activity!!.applicationContext
-            val db = DataBaseHandler(context)
-
-            val data = db.readBought()
-
-            for(i in 0..(data.size-1))
-                list.add(data[i].id.toString())
         }
 
         companion object {

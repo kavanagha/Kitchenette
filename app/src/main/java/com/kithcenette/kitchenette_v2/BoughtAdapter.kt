@@ -6,15 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import kotlinx.android.synthetic.main.shopping_list_item.view.*
+import kotlinx.android.synthetic.main.bought_list_item.view.*
 
 
-class ShoppingAdapter(private val items : ArrayList<String>, val context: Context)
-    : RecyclerView.Adapter<ViewHolderShop>() {
+class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
+    : RecyclerView.Adapter<ViewHolderBought>() {
 
     val adapter = this
 
-    override fun onBindViewHolder(p0: ViewHolderShop, p1: Int) {
+    override fun onBindViewHolder(p0: ViewHolderBought, p1: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -22,20 +22,20 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
         return items.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderShop {
-        return ViewHolderShop(LayoutInflater.from(context).inflate(R.layout.shopping_list_item,
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderBought {
+        return ViewHolderBought(LayoutInflater.from(context).inflate(R.layout.bought_list_item,
             parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolderShop, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: ViewHolderBought, position: Int, payloads: MutableList<Any>) {
         var db = DataBaseHandler(context)
 
         var food : Food? = db.findFood(items[position].toInt())
 
         holder?.tvFoodItem?.text = food?.name
-        holder?.buttonCheck.setOnClickListener{
-            db.removeFoodShopping(items[position].toInt())
-            db.addFoodBought(items[position].toInt())
+        holder?.buttonAddShop.setOnClickListener{
+            db.addFoodShopping(items[position].toInt())
+            db.removeFoodBought(items[position].toInt())
             items.remove(items[position])
             adapter.notifyDataSetChanged()
         }
@@ -47,9 +47,9 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
     }
 }
 
-class ViewHolderShop (private val view: View) : RecyclerView.ViewHolder(view) {
-    val tvFoodItem = view.tv_foodShop!!
-    val buttonCheck: ImageButton = view.shopCheck!!
+class ViewHolderBought (private val view: View) : RecyclerView.ViewHolder(view) {
+    val tvFoodItem = view.tv_foodBought!!
+    val buttonAddShop: ImageButton = view.addShop
+    val buttonAddCupboard:ImageButton = view.addCupboard
     val buttonRemoveList: ImageButton = view.removeList
-
 }
