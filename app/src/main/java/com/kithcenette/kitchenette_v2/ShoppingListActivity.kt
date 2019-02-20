@@ -41,7 +41,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
         ////////////////////////////////// FLOATING BUTTON ///////////////////////////
 
-        fab.setOnClickListener { view ->
+        fab_search.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }

@@ -146,6 +146,8 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             val favItem = rootView.findViewById(R.id.favItem) as RecyclerView
 
             if (arguments?.getInt(ARG_SECTION_NUMBER) == 1) {
+            }
+            else{
                 addFoodItems()
                 favItem.layoutManager = LinearLayoutManager(activity)
                 favItem.adapter = FoodAdapter(list, activity!!.applicationContext)
@@ -162,9 +164,6 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                         })
                 )
             }
-            /*else{
-                   //readRecipeFavourites()
-            }*/
             return rootView
         }
 

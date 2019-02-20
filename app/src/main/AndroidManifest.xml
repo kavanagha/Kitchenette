@@ -18,11 +18,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".ShoppingListItemActivity"
-                android:label="@string/title_activity_shopping_list_item"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
                 android:name=".FavouritesActivity"
                 android:label="@string/title_activity_favourites"
                 android:theme="@style/AppTheme.NoActionBar">
