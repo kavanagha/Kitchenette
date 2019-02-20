@@ -43,6 +43,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this@MainActivity, AddFoodActivity::class.java)
             startActivity(intent)
         }
+
+        viewCupboardButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, CupboardActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onBackPressed() {

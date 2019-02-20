@@ -77,7 +77,6 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
             result
         }
     }
-
     fun readFoodData() : MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
 
@@ -96,7 +95,6 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
         return list
     }
-
     fun findFood(id : Int) : Food? {
         val db = this.readableDatabase
 
@@ -255,6 +253,51 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
 
         val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CATEGORY = \"$cat\""
 
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
+    fun addFoodCupboard(id:Int){
+        val db = this.writableDatabase
+
+        val cv = ContentValues()
+        cv.put(COL_FOOD_CUPBOARD, "1")
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun removeFoodCupboard(id:Int){
+        val db = this.writableDatabase
+
+        val cv = ContentValues()
+        cv.put(COL_FOOD_CUPBOARD, "0")
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun readFoodCupboard() :MutableList<Food>{
+        val list : MutableList<Food> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CUPBOARD =\"1\""
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {

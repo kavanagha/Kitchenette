@@ -44,6 +44,11 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
             items.remove(items[position])
             adapter.notifyDataSetChanged()
         }
+        holder?.buttonAddCupboard.setOnClickListener{
+            db.addFoodCupboard(items[position].toInt())
+            items.remove(items[position])
+            adapter.notifyDataSetChanged()
+        }
     }
 }
 

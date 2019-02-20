@@ -57,21 +57,16 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             db.addFoodFavourites(foodMessage.toInt())
         }
 
-        removeShoppingButton.setOnClickListener {
-            db.removeFoodShopping(foodMessage.toInt())
-        }
-
-        addBought.setOnClickListener {
-            db.removeFoodShopping(foodMessage.toInt())
-            db.addFoodBought(foodMessage.toInt())
-        }
-
-        removeBought.setOnClickListener {
-            db.removeFoodBought(foodMessage.toInt())
-        }
-
         removeFavourites.setOnClickListener {
             db.removeFoodFavourites(foodMessage.toInt())
+        }
+
+        addCupboard.setOnClickListener {
+            db.addFoodCupboard(foodMessage.toInt())
+        }
+
+        removeCupboard.setOnClickListener {
+            db.removeFoodCupboard(foodMessage.toInt())
         }
 
 

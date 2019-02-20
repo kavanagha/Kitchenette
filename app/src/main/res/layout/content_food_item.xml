@@ -90,41 +90,33 @@
                 android:weightSum="2"
                 android:orientation="horizontal">
             <Button
-                    android:id="@+id/removeShoppingButton"
+                        android:id="@+id/addCupboard"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:padding="10dp"
-                    android:text="Shopping Remove"
+                    android:text="ADD CUPBOARD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <Button
-                    android:id="@+id/removeFavourites"
+                    android:id="@+id/removeCupboard"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:padding="10dp"
-                    android:text="Favourites Remove"
+                    android:text="REMOVE CUPBOARD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
+                android:weightSum="1"
                 android:orientation="horizontal">
             <Button
-                    android:id="@+id/addBought"
+                    android:id="@+id/removeFavourites"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:padding="10dp"
-                    android:text="Bought Add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <Button
-                    android:id="@+id/removeBought"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:text="Bought Remove"
+                    android:text="REMOVE FAVOURITES"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

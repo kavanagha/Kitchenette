@@ -14,4 +14,5 @@
     <string name="title_activity_shopping_list">Shopping List</string>
 
     <string name="title_activity_favourites">Favourites</string>
+    <string name="title_activity_cupboard">CupboardActivity</string>
 </resources>
