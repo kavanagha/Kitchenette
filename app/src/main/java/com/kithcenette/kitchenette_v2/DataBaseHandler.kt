@@ -105,6 +105,8 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
                         food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
                         food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
                         food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
+                        food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
+                        food.measurement = it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
                         return food
                 }
         }
@@ -309,6 +311,27 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         result.close()
         db.close()
         return list
+    }
+
+    fun addFoodQuantity(id:Int, qty:Int, msr:String){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        val food : Food? = findFood(id)
+
+        val old_qty = food?.quantity!!.toInt()
+        val new_qty : Int = old_qty + qty
+
+        cv.put(COL_FOOD_QUANTITY,new_qty)
+        cv.put(COL_FOOD_MEASUREMENT,msr)
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
     }
 
     //////// BARCODE TABLE ////////////////
