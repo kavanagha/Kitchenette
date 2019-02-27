@@ -1,5 +1,6 @@
 package com.kithcenette.kitchenette_v2
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -8,17 +9,18 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_cupboard.*
 import kotlinx.android.synthetic.main.app_bar_cupboard.*
 import kotlinx.android.synthetic.main.content_cupboard.*
+import kotlinx.android.synthetic.main.cupboard_list_item.*
 
 class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val list : ArrayList<String> = ArrayList()
 
+    @SuppressLint("RtlHardcoded", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cupboard)
@@ -29,6 +31,8 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 .setAction("Action", null).show()
         }
 
+        ////////////////// NAV DRAWER ////////////////////////////////
+
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -37,12 +41,15 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        //////////////////// RECYCLER VIEW ////////////////////////////////////////
         var message:String?
 
         addFoodItems()
         foodItem.layoutManager = LinearLayoutManager(this)
         foodItem.adapter = CupboardAdapter(list, this)
-        foodItem.addOnItemTouchListener(
+
+
+       /* foodItem.addOnItemTouchListener(
             RecyclerItemClickListener(
                 this@CupboardActivity,
                 object : RecyclerItemClickListener.OnItemClickListener {
@@ -53,7 +60,8 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         startActivity(intent)
                     }
                 })
-        )
+        )*/
+
     }
 
     //////////////////// GENERAL METHODS /////////////////////////

@@ -5,8 +5,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.cupboard_list_item.view.*
+import kotlinx.android.synthetic.main.add_quantity_popup.view.*
 
 
 class CupboardAdapter(private val items : ArrayList<String>, val context: Context)
@@ -32,9 +35,23 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         val db = DataBaseHandler(context)
         val food : Food? = db.findFood(items[position].toInt())
 
+        val layoutInflater = LayoutInflater.from(context)
+
         holder.tvFoodItem.text = food?.name
         holder.tvQuantityItem.text = food?.quantity.toString()
         holder.tvMeasurement.text = food?.measurement
+        holder.btnAddFood.setOnClickListener{
+            val window = PopupWindow(context)
+            val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
+            window.contentView = view
+            val imageView = view.findViewById<ImageView>(R.id.imageView)
+            imageView.setOnClickListener {
+                window.dismiss()
+            }
+            window.showAsDropDown(holder.btnAddFood)
+        }
+
+
     }
 }
 
@@ -42,5 +59,6 @@ class ViewHolderCupboard (private val view: View) : RecyclerView.ViewHolder(view
     val tvFoodItem = view.tv_food!!
     val tvQuantityItem = view.tvQuantity!!
     val tvMeasurement = view.tvMeasurement!!
+    val btnAddFood: ImageButton = view.openQuantityPopup!!
 
 }
