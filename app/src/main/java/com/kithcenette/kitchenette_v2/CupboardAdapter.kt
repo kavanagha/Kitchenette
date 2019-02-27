@@ -2,11 +2,13 @@ package com.kithcenette.kitchenette_v2
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.cupboard_list_item.view.*
 import kotlinx.android.synthetic.main.add_quantity_popup.view.*
@@ -43,12 +45,19 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         holder.btnAddFood.setOnClickListener{
             val window = PopupWindow(context)
             val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
+
             window.contentView = view
-            val imageView = view.findViewById<ImageView>(R.id.imageView)
-            imageView.setOnClickListener {
+
+            val close = view.findViewById<ImageButton>(R.id.btn_close)
+            close.setOnClickListener {
                 window.dismiss()
             }
-            window.showAsDropDown(holder.btnAddFood)
+
+            val add = view.findViewById<ImageButton>(R.id.add_qty_btn)
+            add.setOnClickListener{
+                
+            }
+            window.showAtLocation(holder.root_layout, Gravity.CENTER,0,0)
         }
 
 
@@ -60,5 +69,6 @@ class ViewHolderCupboard (private val view: View) : RecyclerView.ViewHolder(view
     val tvQuantityItem = view.tvQuantity!!
     val tvMeasurement = view.tvMeasurement!!
     val btnAddFood: ImageButton = view.openQuantityPopup!!
+    val root_layout  = view.root_layout
 
 }
