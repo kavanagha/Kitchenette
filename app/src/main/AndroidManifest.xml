@@ -19,7 +19,7 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".CupboardActivity"
-                android:label="@string/title_activity_cupboard"
+                android:label="My Cupboard"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

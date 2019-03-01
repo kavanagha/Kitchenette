@@ -105,8 +105,6 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
                         food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
                         food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
                         food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
-                        food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
-                        food.measurement = it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
                         return food
                 }
         }
@@ -313,13 +311,30 @@ class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABAS
         return list
     }
 
+    fun findFoodQuantity(id : Int) : Food? {
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()){
+                val food = Food()
+                food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
+                food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
+                food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
+                food.measurement = it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
+                return food
+            }
+        }
+        db.close()
+        return null
+    }
     fun addFoodQuantity(id:Int, qty:Int, msr:String){
         val db = this.writableDatabase
         val cv = ContentValues()
 
-        val food : Food? = findFood(id)
+        val food : Food? = findFoodQuantity(id)
 
-        val old_qty = food?.quantity!!.toInt()
+        val old_qty : Int = food?.quantity!!.toInt()
         val new_qty : Int = old_qty + qty
 
         cv.put(COL_FOOD_QUANTITY,new_qty)

@@ -10,17 +10,15 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.*
 import kotlinx.android.synthetic.main.activity_cupboard.*
 import kotlinx.android.synthetic.main.app_bar_cupboard.*
 import kotlinx.android.synthetic.main.content_cupboard.*
-import kotlinx.android.synthetic.main.cupboard_list_item.*
 
 class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val list : ArrayList<String> = ArrayList()
 
-    @SuppressLint("RtlHardcoded", "InflateParams")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cupboard)
@@ -122,7 +120,7 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     //////////////////// RECYLER VIEW METHODS /////////////////////////////
-    fun addFoodItems(){
+    private fun addFoodItems(){
         val context = this
         var db = DataBaseHandler(context)
 

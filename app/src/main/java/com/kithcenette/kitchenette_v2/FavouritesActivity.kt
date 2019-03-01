@@ -2,8 +2,8 @@ package com.kithcenette.kitchenette_v2
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import kotlinx.android.synthetic.main.activity_favourites.*
 import kotlinx.android.synthetic.main.app_bar_favourites.*
-import kotlinx.android.synthetic.main.content_favourites.view.*
 
 
 class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

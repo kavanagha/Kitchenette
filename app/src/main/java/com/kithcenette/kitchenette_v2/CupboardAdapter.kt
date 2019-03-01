@@ -10,16 +10,13 @@ import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.cupboard_list_item.view.*
 
-
 class CupboardAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderCupboard>(), AdapterView.OnItemSelectedListener {
 
     private var list = arrayOf("grams","litres")
     private var s : String? = null
 
-    override fun onBindViewHolder(p0: ViewHolderCupboard, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onBindViewHolder(p0: ViewHolderCupboard, p1: Int) {    }
 
     override fun getItemCount(): Int {
         return items.size
@@ -30,10 +27,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         s = list[position]
     }
 
-    override fun onNothingSelected(arg0: AdapterView<*>) {
-
-    }
-
+    override fun onNothingSelected(arg0: AdapterView<*>) {    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCupboard {
         return ViewHolderCupboard(LayoutInflater.from(context).inflate(R.layout.cupboard_list_item,
@@ -43,14 +37,14 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
     @SuppressLint("InflateParams")
     override fun onBindViewHolder(holder: ViewHolderCupboard, position: Int, payloads: MutableList<Any>) {
         val db = DataBaseHandler(context)
-        val food : Food? = db.findFood(items[position].toInt())
+        val food : Food? = db.findFoodQuantity(items[position].toInt())
         val id = items[position].toInt()
-
         val layoutInflater = LayoutInflater.from(context)
 
         holder.tvFoodItem.text = food?.name
         holder.tvQuantityItem.text = food?.quantity.toString()
         holder.tvMeasurement.text = food?.measurement
+
         holder.btnAddFood.setOnClickListener{
             val window = PopupWindow(context)
             val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)

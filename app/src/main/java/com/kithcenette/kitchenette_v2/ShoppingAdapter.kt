@@ -40,7 +40,7 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
             adapter.notifyDataSetChanged()
         }
         holder?.buttonRemoveList.setOnClickListener{
-            db.removeFoodBought(items[position].toInt())
+            db.removeFoodShopping(items[position].toInt())
             items.remove(items[position])
             adapter.notifyDataSetChanged()
         }
