@@ -90,6 +90,7 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
                 if(qty.text.toString().isNotEmpty() && s!!.isNotEmpty()){
                     db.addFoodQuantity(id, qty.text.toString().toInt(),s.toString())
                     db.addFoodCupboard(id)
+                    db.removeFoodBought(id)
                     items.remove(items[position])
                     notifyDataSetChanged()
                     window.dismiss()
