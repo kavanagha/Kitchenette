@@ -39,7 +39,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             toolbar.context,
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-                "Deserts & Snacks","Fruits","Meat","Nuts","Oils","Seafood & Fish",
+                "Deserts & Snacks","Fruits","Meat & Poultry","Nuts","Oils","Seafood & Fish",
                 "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
         )
 

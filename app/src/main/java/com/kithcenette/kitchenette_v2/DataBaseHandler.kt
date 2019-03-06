@@ -5,9 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import java.util.ArrayList
 
-const val DATABASE_NAME = "Kitchenette"
+const val DATABASE_NAME = "kitchenette.db"
 
 const val TABLE_FOOD = "food"
 const val COL_FOOD_ID = "id"
@@ -30,34 +31,36 @@ const val COL_BARCODE_QUANTITY = "quantity"
 const val COL_BARCODE_MEASUREMENT = "measurement"
 
 
-class DataBaseHandler (var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1){
+class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, 1){
 
-    override fun onCreate(db: SQLiteDatabase?) {
-        val createFoodTable = "CREATE TABLE " + TABLE_FOOD + " (" +
-                COL_FOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_FOOD_NAME + " varchar(256),  " +
-                COL_FOOD_CATEGORY + " varchar(256), " +
-                COL_FOOD_CUPBOARD + " INTEGER DEFAULT 0, " +
-                COL_FOOD_FAVOURITE  + " INTEGER DEFAULT 0, " +
-                COL_FOOD_SHOPPING + " INTEGER DEFAULT 0, " +
-                COL_FOOD_QUANTITY + " INTEGER, "  +
-                COL_FOOD_MEASUREMENT + " varchar(256), " +
-                COL_FOOD_BOUGHT + " INTEGER DEFAULT 0)"
-        db?.execSQL(createFoodTable)
 
-        val createBarcodeTable = "CREATE TABLE " + TABLE_BARCODE + " ("+
-                COL_BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_BARCODE_BARCODE + " INTEGER, " +
-                COL_BARCODE_FOODID + " INTEGER, " +
-                COL_BARCODE_BRAND + " VARCHAR(256), " +
-                COL_BARCODE_QUANTITY + " INTEGER, " +
-                COL_BARCODE_MEASUREMENT + " VARCHAR(256) )"
-        db?.execSQL(createBarcodeTable)
-    }
+    /* override fun onCreate(db: SQLiteDatabase?) {
+         val createFoodTable = "CREATE TABLE " + TABLE_FOOD + " (" +
+                 COL_FOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                 COL_FOOD_NAME + " varchar(256),  " +
+                 COL_FOOD_CATEGORY + " varchar(256), " +
+                 COL_FOOD_CUPBOARD + " INTEGER DEFAULT 0, " +
+                 COL_FOOD_FAVOURITE  + " INTEGER DEFAULT 0, " +
+                 COL_FOOD_SHOPPING + " INTEGER DEFAULT 0, " +
+                 COL_FOOD_QUANTITY + " INTEGER, "  +
+                 COL_FOOD_MEASUREMENT + " varchar(256), " +
+                 COL_FOOD_BOUGHT + " INTEGER DEFAULT 0)"
+         db?.execSQL(createFoodTable)
+
+         val createBarcodeTable = "CREATE TABLE " + TABLE_BARCODE + " ("+
+                 COL_BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                 COL_BARCODE_BARCODE + " INTEGER, " +
+                 COL_BARCODE_FOODID + " INTEGER, " +
+                 COL_BARCODE_BRAND + " VARCHAR(256), " +
+                 COL_BARCODE_QUANTITY + " INTEGER, " +
+                 COL_BARCODE_MEASUREMENT + " VARCHAR(256) )"
+         db?.execSQL(createBarcodeTable)
+     }*/
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
     /////// FOOD TABLE //////////////
 
