@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -39,8 +38,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             toolbar.context,
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-                "Deserts & Snacks","Fruits","Meat & Poultry","Nuts","Oils","Seafood & Fish",
-                "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+                "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+                "Spices, Herbs & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
         )
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -131,9 +130,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
     private fun addFoodItems() {
         val context = this
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
-        var data = db.readFoodData()
+        val data = db.readFoodData()
 
         for(i in 0..(data.size-1)){
             list.add(data[i].id.toString())
@@ -171,11 +170,11 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    ////////////////////////// FRAGMENT CLASS ////////////////////////////////////
+    //////////////////////////////// FRAGMENT CLASS ////////////////////////////////
 
     /**
      * A placeholder fragment containing a simple view.
-     */
+     * */
     class PlaceholderFragment : Fragment() {
 
         val list : ArrayList<String> = ArrayList()
@@ -188,8 +187,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
             val categoryArray = arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-                "Deserts & Snacks","Fruits","Meat","Nuts","Oils","Seafood & Fish",
-                "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+                "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+                "Spices, Herbs & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
 
             if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
                 addAllFoodItems()
@@ -203,6 +202,13 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             foodItem.layoutManager = LinearLayoutManager(activity)
             foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
+
+           /* val adapter = ArrayAdapter(activity!!.applicationContext,
+                android.R.layout.simple_list_item_1,list)
+            autocompletetextview.threshold=0
+            autocompletetextview.setAdapter(adapter)
+            autocompletetextview.setOnFocusChangeListener {
+                    view, b ->  if(b) autocompletetextview.showDropDown()}*/
 
             var message:String?
             foodItem.addOnItemTouchListener(
@@ -224,9 +230,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
         private fun addAllFoodItems() {
             val context = activity!!.applicationContext
-            var db = DataBaseHandler(context)
+            val db = DataBaseHandler(context)
 
-            var data = db.readFoodData()
+            val data = db.readFoodData()
 
             for(i in 0..(data.size-1)){
                 list.add(data[i].id.toString())
@@ -235,9 +241,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
         private fun addCategoryFoodItems(cat:String) {
             val context = activity!!.applicationContext
-            var db = DataBaseHandler(context)
+            val db = DataBaseHandler(context)
 
-            var data = db.readFoodCategory(cat)
+            val data = db.readFoodCategory(cat)
 
             for(i in 0..(data.size-1)){
                 list.add(data[i].id.toString())
@@ -250,7 +256,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
              * The fragment argument representing the section number for this
              * fragment.
              */
-            private val ARG_SECTION_NUMBER = "section_number"
+            private const val ARG_SECTION_NUMBER = "section_number"
 
             /**
              * Returns a new instance of this fragment for the given section

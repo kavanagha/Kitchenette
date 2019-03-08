@@ -57,12 +57,13 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
          db?.execSQL(createBarcodeTable)
      }*/
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
-    /////// FOOD TABLE //////////////
+    ///////////////// FOOD TABLE /////////////////
 
     fun insertFood(food: Food) : Long? {
         val db = this.writableDatabase

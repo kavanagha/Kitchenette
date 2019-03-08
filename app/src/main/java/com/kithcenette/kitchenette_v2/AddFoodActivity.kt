@@ -21,8 +21,8 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     var categoryList = arrayOf("Baking & Grains","Beans & Legumes","Beverages",
         "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-        "Deserts & Snacks","Fruits","Meat & Poultry","Nuts","Oils","Seafood & Fish",
-        "Spices & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+        "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+        "Spices, Herbs, Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
     var categorySelected : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setSupportActionBar(toolbar)
 
         val context = this
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
         foodCategory!!.onItemSelectedListener = this
         val aa = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryList)
@@ -42,9 +42,9 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             if (foodName.text.toString().isNotEmpty() &&
                 categorySelected!!.isNotEmpty()
             ) {
-                var food = Food(foodName.text.toString(), categorySelected!!)
-                var newID = db.insertFood(food)
-                var message = newID.toString()
+                val food = Food(foodName.text.toString(), categorySelected!!)
+                val newID = db.insertFood(food)
+                val message = newID.toString()
                 val intent = Intent(this@AddFoodActivity, FoodItemActivity::class.java)
                 intent.putExtra("food", message)
                 startActivity(intent)
