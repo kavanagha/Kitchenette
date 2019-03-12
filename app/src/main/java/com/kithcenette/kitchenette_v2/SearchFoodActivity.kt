@@ -12,17 +12,17 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.ThemedSpinnerAdapter
+import android.util.Log
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.widget.*
+import com.kithcenette.search.AutoCompleteFoodAdapter
 import kotlinx.android.synthetic.main.activity_search_food.*
 import kotlinx.android.synthetic.main.app_bar_search_food.*
-import kotlinx.android.synthetic.main.content_search_food.*
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val list : ArrayList<String> = ArrayList()
+    val list : ArrayList<Food> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
                 "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
-                "Spices, Herbs & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+                "Spices, Herbs & Seasonings","Sweeteners","Vegetables","Wheat")
         )
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -52,6 +52,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
+
         }
 
         /////////////////////////// FLOATING BUTTON ////////////////////////////////
@@ -70,6 +71,23 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        addFoodItems()
+
+        //val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,list)
+        val adapter = AutoCompleteFoodAdapter(this, list)
+        autocompletetextview?.threshold=1
+        autocompletetextview?.setAdapter(adapter)
+        autocompletetextview?.setOnFocusChangeListener {
+                view, b ->
+            autocompletetextview.setOnItemClickListener { parent, view, position, id ->
+                val db = DataBaseHandler(this)
+                val message = db.findFoodName(autocompletetextview.text.toString()).toString()
+                val intent = Intent(this@SearchFoodActivity, FoodItemActivity::class.java)
+                intent.putExtra("food", message)
+                this.startActivity(intent)
+            }
+        }
 
     }
 
@@ -135,8 +153,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val data = db.readFoodData()
 
         for(i in 0..(data.size-1)){
-            list.add(data[i].id.toString())
-            //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
+            list.add(data[i])
         }
     }
 
@@ -185,10 +202,13 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         ): View? {
             val rootView = inflater.inflate(R.layout.content_search_food, container, false)
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+            foodItem.layoutManager = LinearLayoutManager(activity)
+            foodItem.setHasFixedSize(true)
+
             val categoryArray = arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
                 "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
-                "Spices, Herbs & Seasonings","Stocks","Sweeteners","Vegetables","Wheat")
+                "Spices, Herbs & Seasonings","Sweeteners","Vegetables","Wheat")
 
             if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
                 addAllFoodItems()
@@ -200,15 +220,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 addCategoryFoodItems(category)
             }
 
-            foodItem.layoutManager = LinearLayoutManager(activity)
             foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
-
-           /* val adapter = ArrayAdapter(activity!!.applicationContext,
-                android.R.layout.simple_list_item_1,list)
-            autocompletetextview.threshold=0
-            autocompletetextview.setAdapter(adapter)
-            autocompletetextview.setOnFocusChangeListener {
-                    view, b ->  if(b) autocompletetextview.showDropDown()}*/
 
             var message:String?
             foodItem.addOnItemTouchListener(

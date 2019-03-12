@@ -1,5 +1,7 @@
 package com.kithcenette.kitchenette_v2
 
+import android.graphics.Bitmap
+
 class Food {
     var id: Int = 0
     var name: String = ""
@@ -10,6 +12,7 @@ class Food {
     var quantity: Int = 0
     var measurement: String = ""
     var bought: Int = 0 //bool
+    var photo: Bitmap? = null
 
     constructor(name:String, category:String){
         this.name = name

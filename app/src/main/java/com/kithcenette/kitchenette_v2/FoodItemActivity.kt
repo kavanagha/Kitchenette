@@ -1,6 +1,7 @@
 package com.kithcenette.kitchenette_v2
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -41,6 +42,8 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         foodName.text = food?.name
         foodItem_category.text = food?.category
+        val bitmap: Bitmap? = food?.photo
+        image.setImageBitmap(bitmap)
 
         //////////////////////////////////// BUTTONS /////////////////////////////////////
 

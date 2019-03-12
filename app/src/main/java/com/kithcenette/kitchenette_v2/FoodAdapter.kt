@@ -1,6 +1,7 @@
 package com.kithcenette.kitchenette_v2
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -24,14 +25,17 @@ class FoodAdapter(private val items : ArrayList<String>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
-        var food : Food? = db.findFood(items[position].toInt())
+        val food : Food? = db.findFood(items[position].toInt())
 
-        holder?.tvFoodItem?.text = food?.name
+        holder.tvFoodItem.text = food?.name
+        val bitmap: Bitmap? = food?.photo
+        holder.image.setImageBitmap(bitmap)
     }
 }
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     val tvFoodItem = view.tv_food!!
+    val image = view.image_food_icon!!
 }

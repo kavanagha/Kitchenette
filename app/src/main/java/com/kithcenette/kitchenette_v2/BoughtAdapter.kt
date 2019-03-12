@@ -2,6 +2,7 @@ package com.kithcenette.kitchenette_v2
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -41,6 +42,9 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
         val food : Food? = db.findFood(items[position].toInt())
         val id = items[position].toInt()
         val layoutInflater = LayoutInflater.from(context)
+
+        val bitmap: Bitmap? = food?.photo
+        holder.image.setImageBitmap(bitmap)
 
         holder.tvFoodItem.text = food?.name
         holder.buttonAddShop.setOnClickListener{
@@ -108,4 +112,5 @@ class ViewHolderBought (view: View) : RecyclerView.ViewHolder(view) {
     val buttonAddCupboard:ImageButton = view.addCupboard
     val buttonRemoveList: ImageButton = view.removeList
     val layout  = view.bought_layout!!
+    val image = view.image_food_icon!!
 }

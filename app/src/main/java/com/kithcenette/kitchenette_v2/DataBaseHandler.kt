@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import java.util.ArrayList
@@ -20,6 +21,7 @@ const val COL_FOOD_SHOPPING = "shoppingList"
 const val COL_FOOD_QUANTITY = "quantity"
 const val COL_FOOD_MEASUREMENT = "measurement"
 const val COL_FOOD_BOUGHT = "bought"
+const val COL_FOOD_PHOTO = "photo"
 
 const val TABLE_BARCODE = "barcodes"
 const val COL_BARCODE_ID = "id"
@@ -85,7 +87,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val list : MutableList<Food> = ArrayList()
 
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_FOOD"
+        val query = "SELECT * FROM $TABLE_FOOD ORDER BY $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
@@ -105,12 +107,30 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
         db.rawQuery(query, arrayOf(id.toString())).use{
                 if (it.moveToFirst()){
-                        val food = Food()
-                        food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
-                        food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
-                        food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
-                        return food
+                    val food = Food()
+                    food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
+                    food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
+                    food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
+                    val image = it.getBlob(it.getColumnIndex(COL_FOOD_PHOTO))
+                    if (image!=null)
+                        food.photo = BitmapFactory.decodeByteArray(image, 0, image.size )
+                    return food
                 }
+        }
+        db.close()
+        return null
+    }
+    fun findFoodName(name:String): Int? {
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_NAME = ?"
+        db.rawQuery(query, arrayOf(name)).use{
+            if (it.moveToFirst()){
+                val food = Food()
+                food.id=it.getString(it.getColumnIndex(COL_FOOD_ID)).toInt()
+                val id = food.id
+                return id
+            }
         }
         db.close()
         return null
@@ -147,7 +167,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun readShopping():MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_SHOPPING =\"1\""
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_SHOPPING =\"1\" " +
+                "ORDER BY $COL_FOOD_CATEGORY, $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
@@ -192,7 +213,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun readBought():MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_BOUGHT =\"1\""
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_BOUGHT =\"1\" ORDER BY $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
@@ -237,7 +258,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun readFoodFavourites():MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_FAVOURITE =\"1\""
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_FAVOURITE =\"1\" ORDER BY $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
@@ -255,7 +276,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
 
-        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CATEGORY = \"$cat\""
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CATEGORY = \"$cat\" ORDER BY $COL_FOOD_NAME"
 
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
@@ -301,7 +322,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun readFoodCupboard() :MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CUPBOARD =\"1\""
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_CUPBOARD =\"1\" " +
+                "ORDER BY $COL_FOOD_CATEGORY, $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {

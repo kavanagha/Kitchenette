@@ -1,6 +1,7 @@
 package com.kithcenette.kitchenette_v2
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import kotlinx.android.synthetic.main.shopping_list_item.view.*
 class ShoppingAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderShop>() {
 
-    val adapter = this
+    private val adapter = this
 
     override fun onBindViewHolder(p0: ViewHolderShop, p1: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -28,18 +29,21 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
     }
 
     override fun onBindViewHolder(holder: ViewHolderShop, position: Int, payloads: MutableList<Any>) {
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
-        var food : Food? = db.findFood(items[position].toInt())
+        val food : Food? = db.findFood(items[position].toInt())
 
-        holder?.tvFoodItem?.text = food?.name
-        holder?.buttonCheck.setOnClickListener{
+        val bitmap: Bitmap? = food?.photo
+        holder.image.setImageBitmap(bitmap)
+
+        holder.tvFoodItem.text = food?.name
+        holder.buttonCheck.setOnClickListener{
             db.removeFoodShopping(items[position].toInt())
             db.addFoodBought(items[position].toInt())
             items.remove(items[position])
             adapter.notifyDataSetChanged()
         }
-        holder?.buttonRemoveList.setOnClickListener{
+        holder.buttonRemoveList.setOnClickListener{
             db.removeFoodShopping(items[position].toInt())
             items.remove(items[position])
             adapter.notifyDataSetChanged()
@@ -51,5 +55,5 @@ class ViewHolderShop (private val view: View) : RecyclerView.ViewHolder(view) {
     val tvFoodItem = view.tv_foodShop!!
     val buttonCheck: ImageButton = view.shopCheck!!
     val buttonRemoveList: ImageButton = view.removeList
-
+    val image = view.image_food_icon!!
 }
