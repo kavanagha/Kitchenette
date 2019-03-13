@@ -12,9 +12,10 @@ class Recipe{
     var method:String = ""
     var favourite: Int = 0
     var photo: Bitmap? = null
+    var servings: Int = 0
 
 
-    constructor(name:String, mealType:String, cuisine:String,
+    constructor(name:String, mealType:String, cuisine:String, servings:Int,
                 description:String, method:String){
         this.name = name
         this.mealType = mealType
@@ -23,6 +24,7 @@ class Recipe{
         this.description = description
         this.method = method
       //  this.favourite = favourite
+        this.servings = servings
     }
 
     constructor(){}

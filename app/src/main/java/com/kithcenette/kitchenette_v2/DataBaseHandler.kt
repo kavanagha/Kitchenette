@@ -41,6 +41,7 @@ const val COL_RECIPE_DESCRIPTION = "description"
 const val COL_RECIPE_METHOD = "method"
 const val COL_RECIPE_FAVOURITE = "favourite"
 const val COL_RECIPE_PHOTO =  "photo"
+const val COL_RECIPE_SERVINGS = "servings"
 
 const val TABLE_INGREDIENT = "ingredients"
 const val COL_INGREDIENT_ID = "id"
@@ -401,6 +402,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                 recipe.description = it.getString(it.getColumnIndex(COL_RECIPE_DESCRIPTION))
                 recipe.method = it.getString(it.getColumnIndex(COL_RECIPE_METHOD))
                 recipe.favourite = it.getString(it.getColumnIndex(COL_RECIPE_FAVOURITE)).toInt()
+                recipe.servings = it.getString(it.getColumnIndex(COL_RECIPE_SERVINGS)).toInt()
                 val image = it.getBlob(it.getColumnIndex(COL_RECIPE_PHOTO))
                 if (image!=null)
                     recipe.photo = BitmapFactory.decodeByteArray(image, 0, image.size )
