@@ -76,7 +76,7 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.add_food, menu)
+        menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
 
@@ -95,7 +95,8 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
-
+                val menuIntent = Intent(this@AddFoodActivity, CookbookActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_shopping -> {
                 val menuIntent = Intent(this@AddFoodActivity, ShoppingListActivity::class.java)

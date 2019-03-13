@@ -9,18 +9,14 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.gms.vision.barcode.Barcode
-import kotlinx.android.synthetic.main.activity_barcode_history.*
-import kotlinx.android.synthetic.main.app_bar_barcode_history.*
-import kotlinx.android.synthetic.main.content_barcode_history.*
+import kotlinx.android.synthetic.main.activity_cookbook.*
+import kotlinx.android.synthetic.main.app_bar_cookbook.*
 
-class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    private val list : ArrayList<String> = ArrayList()
+class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_barcode_history)
+        setContentView(R.layout.activity_cookbook)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
@@ -35,26 +31,8 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-
-        view_barcode.text="Barcodes Here"
-
-        /*
-        val context = this
-        var db = DataBaseHandler(context)
-
-        var bar = Barcodes(123456)
-        db.insertBarcode(bar)
-
-        var data: MutableList<Barcodes> = db.readBarcodeData()
-        view_barcode.text=""
-        if(data.isNotEmpty()){
-            for(i in 0..(data.size-1)){
-                view_barcode.append(data[i].id.toString() + " " + data[i].barcode.toString() +  "\n")
-            }
-        }*/
     }
 
-    //////////// NAV DRAWER METHODS ///////////////////
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -70,9 +48,12 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when (item.itemId) {
+            R.id.action_settings -> return true
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 
@@ -80,23 +61,23 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
-                val menuIntent = Intent(this@BarcodeHistoryActivity, MainActivity::class.java)
+                val menuIntent = Intent(this@CookbookActivity, MainActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
-                val menuIntent = Intent(this@BarcodeHistoryActivity, CookbookActivity::class.java)
+                val menuIntent = Intent(this@CookbookActivity, CookbookActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_shopping -> {
-                val menuIntent = Intent(this@BarcodeHistoryActivity, ShoppingListActivity::class.java)
+                val menuIntent = Intent(this@CookbookActivity, ShoppingListActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
-                val menuIntent = Intent(this@BarcodeHistoryActivity, FavouritesActivity::class.java)
+                val menuIntent = Intent(this@CookbookActivity, FavouritesActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_barcode -> {
-                val menuIntent = Intent(this@BarcodeHistoryActivity, ScanBarcodeActivity::class.java)
+                val menuIntent = Intent(this@CookbookActivity, ScanBarcodeActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_share -> {
@@ -106,18 +87,5 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    //////////// VIEW BARCODE HISTORY METHODS ////////////////////////
-    fun addBarcodeItems()
-    {
-        val context = this
-        val db = DataBaseHandler(context)
-
-        val data = db.readBarcodeData()
-
-        for(i in 0..(data.size-1)){
-            list.add(data[i].id.toString() + " " + data[i].barcode.toString() + "\n")
-        }
     }
 }

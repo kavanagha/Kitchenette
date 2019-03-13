@@ -18,6 +18,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
+                android:name=".CookbookActivity"
+                android:label="@string/title_activity_cookbook"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
                 android:name=".CupboardActivity"
                 android:label="My Cupboard"
                 android:theme="@style/AppTheme.NoActionBar">

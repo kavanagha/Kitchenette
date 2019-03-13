@@ -114,7 +114,7 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.scan_barcode, menu)
+        menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
 
@@ -133,7 +133,8 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
-
+                val menuIntent = Intent(this@ScanBarcodeActivity, CookbookActivity::class.java)
+                startActivity(menuIntent)
             }
             R.id.nav_shopping -> {
                 val menuIntent = Intent(this@ScanBarcodeActivity, ShoppingListActivity::class.java)
