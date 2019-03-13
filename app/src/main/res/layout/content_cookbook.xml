@@ -11,7 +11,7 @@
         tools:context=".CookbookActivity$PlaceholderFragment">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/foodItem"
+            android:id="@+id/recipeItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -32,33 +32,29 @@ const val COL_BARCODE_BRAND = "brand"
 const val COL_BARCODE_QUANTITY = "quantity"
 const val COL_BARCODE_MEASUREMENT = "measurement"
 
+const val TABLE_RECIPE = "recipes"
+const val COL_RECIPE_ID = "id"
+const val COL_RECIPE_NAME = "name"
+const val COL_RECIPE_MEAL = "mealType"
+const val COL_RECIPE_CUISINE = "cuisine"
+const val COL_RECIPE_DESCRIPTION = "description"
+const val COL_RECIPE_METHOD = "method"
+const val COL_RECIPE_FAVOURITE = "favourite"
+const val COL_RECIPE_PHOTO =  "photo"
+
+const val TABLE_INGREDIENT = "ingredients"
+const val COL_INGREDIENT_ID = "id"
+const val COL_INGREDIENT_RECIPE = "recipeID"
+const val COL_INGREDIENT_FOOD = "foodID"
+const val COL_INGREDIENT_QUANTITY = "quantity"
+const val COL_INGREDIENT_MEASUREMENT = "measurement"
+
+const val TABLE_DIET = "diet"
+const val COL_DIET_ID = "id"
+const val COL_DIET_NAME = "name"
+const val COL_DIET_RECIPE = "recipeID"
 
 class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, 1){
-
-
-    /* override fun onCreate(db: SQLiteDatabase?) {
-         val createFoodTable = "CREATE TABLE " + TABLE_FOOD + " (" +
-                 COL_FOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                 COL_FOOD_NAME + " varchar(256),  " +
-                 COL_FOOD_CATEGORY + " varchar(256), " +
-                 COL_FOOD_CUPBOARD + " INTEGER DEFAULT 0, " +
-                 COL_FOOD_FAVOURITE  + " INTEGER DEFAULT 0, " +
-                 COL_FOOD_SHOPPING + " INTEGER DEFAULT 0, " +
-                 COL_FOOD_QUANTITY + " INTEGER, "  +
-                 COL_FOOD_MEASUREMENT + " varchar(256), " +
-                 COL_FOOD_BOUGHT + " INTEGER DEFAULT 0)"
-         db?.execSQL(createFoodTable)
-
-         val createBarcodeTable = "CREATE TABLE " + TABLE_BARCODE + " ("+
-                 COL_BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                 COL_BARCODE_BARCODE + " INTEGER, " +
-                 COL_BARCODE_FOODID + " INTEGER, " +
-                 COL_BARCODE_BRAND + " VARCHAR(256), " +
-                 COL_BARCODE_QUANTITY + " INTEGER, " +
-                 COL_BARCODE_MEASUREMENT + " VARCHAR(256) )"
-         db?.execSQL(createBarcodeTable)
-     }*/
-
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -373,6 +369,61 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         }
         db.close()
+    }
+
+    /****************** RECIPES TABLE *******************/
+    fun readRecipeData() : MutableList<Recipe>{
+        val list : MutableList<Recipe> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_RECIPE ORDER BY $COL_RECIPE_NAME"
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val recipe = Recipe()
+                recipe.id = result.getString(result.getColumnIndex(COL_RECIPE_ID)).toInt()
+                recipe.name = result.getString(result.getColumnIndex(COL_RECIPE_NAME))
+                list.add(recipe)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    fun findRecipe(id:Int): Recipe?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_RECIPE WHERE $COL_RECIPE_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()){
+                val recipe = Recipe()
+                recipe.name=it.getString(it.getColumnIndex(COL_RECIPE_NAME))
+                recipe.mealType = it.getString(it.getColumnIndex(COL_RECIPE_MEAL))
+                recipe.cuisine = it.getString(it.getColumnIndex(COL_RECIPE_CUISINE))
+                recipe.description = it.getString(it.getColumnIndex(COL_RECIPE_DESCRIPTION))
+                recipe.method = it.getString(it.getColumnIndex(COL_RECIPE_METHOD))
+                recipe.favourite = it.getString(it.getColumnIndex(COL_RECIPE_FAVOURITE)).toInt()
+                val image = it.getBlob(it.getColumnIndex(COL_RECIPE_PHOTO))
+                if (image!=null)
+                    recipe.photo = BitmapFactory.decodeByteArray(image, 0, image.size )
+                return recipe
+            }
+        }
+        db.close()
+        return null
+    }
+
+    /************************ INGREDIENTS TABLE ********************************/
+    fun findIngredients(id:Int) : Ingredients?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_RECIPE WHERE $COL_RECIPE_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()) {
+                val ingredient = Ingredients()
+
+                return ingredient
+            }
+        }
+        db.close()
+        return null
     }
 
     //////// BARCODE TABLE ////////////////

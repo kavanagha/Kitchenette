@@ -1,6 +1,6 @@
 package com.kithcenette.kitchenette_v2
 
-class DietRequirements{
+class Diet{
     var id: Int = 0
     var name: String = ""
     var recipeID: Int = 0
