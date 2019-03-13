@@ -7,6 +7,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/app_bar_cookbook"
-        tools:context=".CookbookActivity">
+        android:id="@+id/constraintLayout"
+        tools:context=".CookbookActivity$PlaceholderFragment">
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/foodItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 </android.support.constraint.ConstraintLayout>
