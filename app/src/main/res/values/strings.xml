@@ -16,4 +16,5 @@
     <string name="title_activity_favourites">Favourites</string>
     <string name="title_activity_cupboard">CupboardActivity</string>
     <string name="title_activity_cookbook">CookbookActivity</string>
+    <string name="title_activity_recipe_item">RecipeItemActivity</string>
 </resources>
