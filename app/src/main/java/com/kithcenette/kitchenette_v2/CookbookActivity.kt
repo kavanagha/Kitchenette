@@ -109,10 +109,6 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     /**************** TAB ACTIVITY METHODS *****************/
-    /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
@@ -122,9 +118,6 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         override fun getCount(): Int { return 2 }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     class PlaceholderFragment : Fragment() {
 
         private val list : ArrayList<String> = ArrayList()
@@ -149,6 +142,21 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                 recipeItem.layoutManager = LinearLayoutManager(activity)
                 recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+
+                var message:String?
+                recipeItem.addOnItemTouchListener(
+                    RecyclerItemClickListener(
+                        activity!!.applicationContext,
+                        object : RecyclerItemClickListener.OnItemClickListener {
+                            override fun onItemClick(view: View, position: Int) {
+                                message = list[position]
+                                val intent = Intent(activity!!.applicationContext, RecipeItemActivity::class.java)
+                                intent.putExtra("recipe", message)
+                                startActivity(intent)
+                            }
+                        })
+                )
+
             }
 
             return rootView
