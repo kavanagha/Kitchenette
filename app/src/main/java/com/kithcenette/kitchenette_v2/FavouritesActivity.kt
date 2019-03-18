@@ -27,25 +27,13 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setContentView(R.layout.activity_favourites)
         setSupportActionBar(toolbar)
 
-        ///////////////////////////////////TAB ACTIVITY //////////////////////////////
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        /************************* TAB ACTIVITY *************************/
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-        // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
-
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
-        ////////////////////////////////// FLOATING BUTTON ///////////////////////////
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
-        //////////////////////////////// NAVIGATION DRAWER /////////////////////////
+        /************************ NAVIGATION DRAWER **********************/
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -56,7 +44,7 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         nav_view.setNavigationItemSelectedListener(this)
     }
 
-    ///////////////////// NAV DRAWER METHODS ////////////////////////
+    /************************ NAV DRAWER METHODS **************************/
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -67,7 +55,6 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
@@ -80,7 +67,6 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
                 val menuIntent = Intent(this@FavouritesActivity, MainActivity::class.java)
@@ -112,28 +98,18 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    ///////////////////// TAB ACTIVITY METHODS ////////////////////////
-    /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+    /*************************** TAB ACTIVITY METHODS *****************************/
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return FavouritesActivity.PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
-            // Show 3 total pages.
             return 2
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     class PlaceholderFragment : Fragment() {
 
         private val list : ArrayList<String> = ArrayList()
@@ -144,20 +120,35 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         ): View? {
             val rootView = inflater.inflate(R.layout.content_favourites, container, false)
             val favItem = rootView.findViewById(R.id.favItem) as RecyclerView
+            var message:String?
+            var intent : Intent
 
             if (arguments?.getInt(ARG_SECTION_NUMBER) == 1) {
+                addRecipeItems()
+                favItem.layoutManager = LinearLayoutManager(activity)
+                favItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                favItem.addOnItemTouchListener(
+                    RecyclerItemClickListener(activity!!.applicationContext,
+                        object : RecyclerItemClickListener.OnItemClickListener{
+                            override fun onItemClick(view: View, position: Int) {
+                                message = list[position]
+                                intent = Intent(activity!!.applicationContext, RecipeItemActivity::class.java)
+                                intent.putExtra("recipe",message)
+                                startActivity(intent)
+                            }
+                        })
+                )
             }
             else{
                 addFoodItems()
                 favItem.layoutManager = LinearLayoutManager(activity)
                 favItem.adapter = FoodAdapter(list, activity!!.applicationContext)
-                var message:String?
                 favItem.addOnItemTouchListener(
                     RecyclerItemClickListener(activity!!.applicationContext,
                         object : RecyclerItemClickListener.OnItemClickListener {
                             override fun onItemClick(view: View, position: Int) {
                                 message = list[position]
-                                val intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
+                                intent = Intent(activity!!.applicationContext, FoodItemActivity::class.java)
                                 intent.putExtra("food", message)
                                 startActivity(intent)
                             }
@@ -170,24 +161,25 @@ class FavouritesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         private fun addFoodItems(){
             val context = activity!!.applicationContext
             val db = DataBaseHandler(context)
-
             val data = db.readFoodFavourites()
 
             for(i in 0..(data.size-1))
                 list.add(data[i].id.toString())
+            db.close()
+        }
+        private fun addRecipeItems(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data = db.readRecipeFavourites()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
+            db.close()
         }
 
         companion object {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.
-             */
             private const val ARG_SECTION_NUMBER = "section_number"
 
-            /**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             */
             fun newInstance(sectionNumber: Int): FavouritesActivity.PlaceholderFragment {
                 val fragment = FavouritesActivity.PlaceholderFragment()
                 val args = Bundle()
