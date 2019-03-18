@@ -35,11 +35,15 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setContentView(R.layout.activity_recipe_item)
         setSupportActionBar(toolbar)
 
+        val context = this
+        val db = DataBaseHandler(context)
+        val id: String = intent.getStringExtra("recipe")
+        addIngredients(id.toInt())
+
         /***************FLOATING ACTION BUTTONS ******************/
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Make This", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            deleteQuantity(id.toInt())
         }
         /*********************** NAVIGATION ***********************/
 
@@ -52,9 +56,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         nav_view.setNavigationItemSelectedListener(this)
 
         /**************  FILL PAGE *******************************/
-        val context = this
-        val db = DataBaseHandler(context)
-        val id: String = intent.getStringExtra("recipe")
         val recipe : Recipe? = db.findRecipe(id.toInt())
 
         recipeName.text = recipe?.name
@@ -66,7 +67,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val bitmap: Bitmap? = recipe?.photo
         image.setImageBitmap(bitmap)
 
-        addIngredients(id.toInt())
         ingredientItem.layoutManager = LinearLayoutManager(this)
         ingredientItem.adapter = IngredientAdapter(foodList, idList, this)
 
@@ -156,6 +156,15 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         for(i in 0..(data.size-1)) {
             foodList.add(data[i].foodID.toString())
             idList.add(data[i].id.toString())
+        }
+    }
+
+    private fun deleteQuantity(id:Int){
+        val context = this
+        val db = DataBaseHandler(context)
+        val data = db.readIngredients(id)
+        for(i in 0..(data.size-1)) {
+            db.removeQuantityCupboard(data[i].id, data[i].foodID)
         }
     }
 

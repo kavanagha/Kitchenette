@@ -371,6 +371,20 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         }
         db.close()
     }
+    fun setFoodQuantity(id:Int, qty:Double){
+        val db = this.writableDatabase
+
+        val cv = ContentValues()
+        cv.put(COL_FOOD_QUANTITY, qty)
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
 
     /****************** RECIPES TABLE *******************/
     fun readRecipeData() : MutableList<Recipe>{
@@ -491,6 +505,24 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         return null
     }
 
+    fun removeQuantityCupboard(iId:Int, fId:Int){
+        val db = this.readableDatabase
+        val food = findFoodQuantity(fId)
+        val ingredient = findIngredient((iId))
+
+        val fQuantity = food!!.quantity.toDouble()
+        val iQuantity = ingredient!!.quantity.toDouble()
+        val newQuantity: Double = fQuantity.minus(iQuantity)
+
+        if (newQuantity <= 0.0){
+            setFoodQuantity(fId, 0.0)
+            removeFoodCupboard(fId)
+        }
+        else{
+            setFoodQuantity(fId,newQuantity)
+        }
+        db.close()
+    }
 
     /************************** BARCODE TABLE **************************************/
 
