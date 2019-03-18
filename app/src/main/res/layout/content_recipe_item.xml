@@ -11,10 +11,6 @@
         tools:showIn="@layout/app_bar_recipe_item"
         tools:context=".RecipeItemActivity">
 
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -41,7 +37,7 @@
                         android:layout_marginTop="20dp"
                         android:text="Recipe Name"
                         android:textSize="40sp"
-                        android:textColor="#000"
+                        android:textColor="@color/primaryTextColor"
                         android:layout_weight="2"/>
                 <ImageButton
                         android:id="@+id/shoppingButton"
@@ -71,7 +67,7 @@
                         android:layout_margin="10dp"
                         android:id="@+id/serving_label"
                         android:textSize="20sp"
-                        android:textColor="#000"
+                        android:textColor="@color/primaryTextColor"
                         android:text="Serves:"/>
                 <TextView
                         android:layout_width="wrap_content"
@@ -79,7 +75,7 @@
                         android:layout_margin="10dp"
                         android:id="@+id/serving"
                         android:textSize="20sp"
-                        android:textColor="#000"
+                        android:textColor="@color/primaryTextColor"
                         android:text="0"/>
                 <TextView
                         android:layout_width="wrap_content"
@@ -87,7 +83,7 @@
                         android:layout_margin="10dp"
                         android:id="@+id/cuisine_label"
                         android:textSize="20sp"
-                        android:textColor="#000"
+                        android:textColor="@color/primaryTextColor"
                         android:text="|  Cuisine:"/>
                 <TextView
                         android:layout_width="wrap_content"
@@ -95,7 +91,7 @@
                         android:layout_margin="10dp"
                         android:id="@+id/cuisine"
                         android:textSize="20sp"
-                        android:textColor="#000"
+                        android:textColor="@color/primaryTextColor"
                         android:text="Irish"/>
 
             </LinearLayout>
@@ -106,8 +102,43 @@
                     android:padding="10dp"
                     android:id="@+id/description"
                     android:textSize="20sp"
-                    android:textColor="#000"
+                    android:textColor="@color/primaryTextColor"
                     android:text="Description Here"/>
+            <TextView
+                    android:id="@+id/ingredient_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    android:textColor="@color/primaryTextColor"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Ingredients:"/>
+            <android.support.v7.widget.RecyclerView
+                    android:id = "@+id/ingredientItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"/>
+            <TextView
+                    android:id="@+id/method_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    android:textColor="@color/primaryTextColor"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Method:"/>
+            <TextView
+                    android:id="@+id/method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="20dp"
+                    android:layout_margin="10dp"
+                    android:text="METHOD HERE"/>
 
         </LinearLayout>
         <!--<RelativeLayout
@@ -131,13 +162,4 @@
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </RelativeLayout>-->
-        <TextView
-                android:id="@+id/method"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:padding="20dp"
-                android:layout_margin="10dp"
-                android:text="METHOD HERE"/>
-    </LinearLayout>
 </ScrollView>

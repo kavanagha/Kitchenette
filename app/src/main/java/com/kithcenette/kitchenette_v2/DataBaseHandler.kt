@@ -242,7 +242,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val db = this.writableDatabase
 
         val cv = ContentValues()
-        cv.put(COL_FOOD_SHOPPING, "0")
+        cv.put(COL_FOOD_FAVOURITE, "0")
 
         val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
         if(result >=1 ) {
@@ -413,14 +413,77 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         return null
     }
 
-    /************************ INGREDIENTS TABLE ********************************/
-    fun findIngredients(id:Int) : Ingredients?{
-        val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_RECIPE WHERE $COL_RECIPE_ID = ?"
-        db.rawQuery(query, arrayOf(id.toString())).use{
-            if (it.moveToFirst()) {
-                val ingredient = Ingredients()
+    fun addRecipeFavourites(id:Int){
+        val db = this.writableDatabase
 
+        val cv = ContentValues()
+        cv.put(COL_RECIPE_FAVOURITE, "1")
+
+        val result = db.update(TABLE_RECIPE, cv, "$COL_RECIPE_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun removeRecipeFavourites(id:Int){
+        val db = this.writableDatabase
+
+        val cv = ContentValues()
+        cv.put(COL_RECIPE_FAVOURITE, "0")
+
+        val result = db.update(TABLE_RECIPE, cv, "$COL_RECIPE_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun readRecipeFavourites():MutableList<Recipe>{
+        val list : MutableList<Recipe> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_RECIPE WHERE $COL_RECIPE_FAVOURITE =\"1\" ORDER BY $COL_FOOD_NAME"
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val recipe = Recipe()
+                recipe.id = result.getString(result.getColumnIndex(COL_RECIPE_ID)).toInt()
+                list.add(recipe)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
+    /************************ INGREDIENTS TABLE ********************************/
+    fun readIngredients(id:Int) : MutableList<Ingredients>{
+        val list : MutableList<Ingredients> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_INGREDIENT WHERE $COL_INGREDIENT_RECIPE = ?"
+        val result = db.rawQuery(query, arrayOf(id.toString()))
+        if (result.moveToFirst()) {
+            do {
+                val ingredient = Ingredients()
+                ingredient.id = result.getString(result.getColumnIndex(COL_INGREDIENT_ID)).toInt()
+                ingredient.foodID = result.getString(result.getColumnIndex(COL_INGREDIENT_FOOD)).toInt()
+                list.add(ingredient)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    fun findIngredient(id:Int) : Ingredients?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_INGREDIENT WHERE $COL_INGREDIENT_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()){
+                val ingredient = Ingredients()
+                ingredient.quantity = it.getString(it.getColumnIndex(COL_INGREDIENT_QUANTITY)).toInt()
+                ingredient.measurement = it.getString(it.getColumnIndex(COL_INGREDIENT_MEASUREMENT))
                 return ingredient
             }
         }
@@ -428,7 +491,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         return null
     }
 
-    //////// BARCODE TABLE ////////////////
+
+    /************************** BARCODE TABLE **************************************/
 
     fun insertBarcode(barcode: Barcodes){
         val db = this.writableDatabase

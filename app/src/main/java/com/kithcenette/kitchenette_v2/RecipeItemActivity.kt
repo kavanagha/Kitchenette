@@ -27,7 +27,8 @@ import java.nio.file.Files.size
 
 class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
+    private val foodList : ArrayList<String> = ArrayList()
+    private val idList : ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +66,21 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val bitmap: Bitmap? = recipe?.photo
         image.setImageBitmap(bitmap)
 
+        addIngredients(id.toInt())
+        ingredientItem.layoutManager = LinearLayoutManager(this)
+        ingredientItem.adapter = IngredientAdapter(foodList, idList, this)
+
+        /************************* Buttons ****************************/
+        shoppingButton.setOnClickListener {
+            for(i in 0..(foodList.size-1))
+                db.addFoodShopping(foodList[i].toInt())
+        }
+
+        favButton.setOnClickListener {
+            db.addRecipeFavourites(id.toInt())
+        }
+
+        db.close()
         /************************ TAB  ACTIVITY ***********************
 
         val viewPager = findViewById<ViewPager>(R.id.pager)
@@ -75,7 +91,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         val mTabLayout = findViewById<TabLayout>(R.id.pager_header)
         mTabLayout.setupWithViewPager(viewPager)*/
-
 
     }
 
@@ -132,10 +147,19 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
+    /**************** INGREDIENTS METHODS *****************/
+    private fun addIngredients(id:Int){
+        val context = this
+        val db = DataBaseHandler(context)
+        val data = db.readIngredients(id)
 
-    /**************** TAB ACTIVITY METHODS *****************/
+        for(i in 0..(data.size-1)) {
+            foodList.add(data[i].foodID.toString())
+            idList.add(data[i].id.toString())
+        }
+    }
 
-    /*
+    /**************** TAB ACTIVITY METHODS *****************
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
         private val PAGE_COUNT = 2
