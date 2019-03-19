@@ -1,9 +1,8 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper

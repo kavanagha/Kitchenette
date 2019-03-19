@@ -1,4 +1,4 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,8 +16,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import kotlinx.android.synthetic.main.activity_shopping.*
 import kotlinx.android.synthetic.main.app_bar_shopping_list.*
-import kotlinx.android.synthetic.main.content_shopping_list.*
-import kotlinx.android.synthetic.main.shopping_list_item.*
 
 class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

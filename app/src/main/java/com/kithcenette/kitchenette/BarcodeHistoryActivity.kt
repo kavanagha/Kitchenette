@@ -1,4 +1,4 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.gms.vision.barcode.Barcode
 import kotlinx.android.synthetic.main.activity_barcode_history.*
 import kotlinx.android.synthetic.main.app_bar_barcode_history.*
 import kotlinx.android.synthetic.main.content_barcode_history.*

@@ -1,28 +1,17 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Looper
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewPager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_recipe_item.*
 import kotlinx.android.synthetic.main.app_bar_recipe_item.*
 import kotlinx.android.synthetic.main.content_recipe_item.*
-import java.nio.file.Files.size
 
 
 class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

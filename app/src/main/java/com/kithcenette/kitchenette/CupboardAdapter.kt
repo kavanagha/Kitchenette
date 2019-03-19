@@ -1,4 +1,4 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.kithcenette.kitchenette.R
 import kotlinx.android.synthetic.main.cupboard_list_item.view.*
 
 class CupboardAdapter(private val items : ArrayList<String>, val context: Context)
@@ -30,7 +31,8 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
     override fun onNothingSelected(arg0: AdapterView<*>) {    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCupboard {
-        return ViewHolderCupboard(LayoutInflater.from(context).inflate(R.layout.cupboard_list_item,
+        return ViewHolderCupboard(LayoutInflater.from(context).inflate(
+            R.layout.cupboard_list_item,
             parent, false))
     }
 

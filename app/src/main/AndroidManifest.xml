@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.kithcenette.kitchenette_v2">
+          package="com.kithcenette.kitchenette">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -18,57 +18,57 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".RecipeItemActivity"
+                android:name="com.kithcenette.kitchenette.RecipeItemActivity"
                 android:label="@string/title_activity_recipe_item"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".CookbookActivity"
+                android:name="com.kithcenette.kitchenette.CookbookActivity"
                 android:label="@string/title_activity_cookbook"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".CupboardActivity"
+                android:name="com.kithcenette.kitchenette.CupboardActivity"
                 android:label="My Cupboard"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".FavouritesActivity"
+                android:name="com.kithcenette.kitchenette.FavouritesActivity"
                 android:label="@string/title_activity_favourites"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".ShoppingListActivity"
+                android:name="com.kithcenette.kitchenette.ShoppingListActivity"
                 android:label="@string/title_activity_shopping_list"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".BarcodeHistoryActivity"
+                android:name="com.kithcenette.kitchenette.BarcodeHistoryActivity"
                 android:label="@string/title_activity_barcode_history"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".ScanBarcodeActivity"
+                android:name="com.kithcenette.kitchenette.ScanBarcodeActivity"
                 android:label="@string/title_activity_scan_barcode"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".AddFoodActivity"
+                android:name="com.kithcenette.kitchenette.AddFoodActivity"
                 android:label="@string/title_activity_add_food"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".FoodItemActivity"
+                android:name="com.kithcenette.kitchenette.FoodItemActivity"
                 android:label="@string/title_activity_food_item"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".SearchFoodActivity"
+                android:name="com.kithcenette.kitchenette.SearchFoodActivity"
                 android:label="@string/title_activity_search_food"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".MainActivity"
+                android:name="com.kithcenette.kitchenette.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.Manifest
 import android.annotation.SuppressLint

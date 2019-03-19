@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.kithcenette.kitchenette_v2.DataBaseHandler
-import com.kithcenette.kitchenette_v2.Food
-import com.kithcenette.kitchenette_v2.R
+import com.kithcenette.kitchenette.DataBaseHandler
+import com.kithcenette.kitchenette.Food
+import com.kithcenette.kitchenette.R
 
 import java.util.*
 

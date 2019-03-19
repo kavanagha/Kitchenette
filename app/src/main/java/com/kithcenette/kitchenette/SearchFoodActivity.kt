@@ -1,4 +1,4 @@
-package com.kithcenette.kitchenette_v2
+package com.kithcenette.kitchenette
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.ThemedSpinnerAdapter
-import android.util.Log
 import android.view.*
 import android.widget.*
 import com.kithcenette.search.AutoCompleteFoodAdapter
