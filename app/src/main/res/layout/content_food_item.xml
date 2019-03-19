@@ -47,6 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ic_menu_shopping"
                     android:background="@null"/>
             <ImageButton
@@ -54,6 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/ic_menu_favourite"
                     android:background="@null"/>
 
@@ -105,21 +107,6 @@
                     android:text="REMOVE CUPBOARD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:orientation="horizontal">
-            <Button
-                    android:id="@+id/removeFavourites"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:text="REMOVE FAVOURITES"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
         </LinearLayout>
 
 

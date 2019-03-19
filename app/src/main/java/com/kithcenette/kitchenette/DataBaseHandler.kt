@@ -115,6 +115,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                     food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
                     food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
                     food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
+                    food.favourite=it.getString(it.getColumnIndex(COL_FOOD_FAVOURITE)).toInt()
                     val image = it.getBlob(it.getColumnIndex(COL_FOOD_PHOTO))
                     if (image!=null)
                         food.photo = BitmapFactory.decodeByteArray(image, 0, image.size )
@@ -132,8 +133,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             if (it.moveToFirst()){
                 val food = Food()
                 food.id=it.getString(it.getColumnIndex(COL_FOOD_ID)).toInt()
-                val id = food.id
-                return id
+                return food.id
             }
         }
         db.close()

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,12 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_food_item.*
 import kotlinx.android.synthetic.main.app_bar_food_item.*
 import kotlinx.android.synthetic.main.content_food_item.*
+import kotlinx.android.synthetic.main.nav_header.*
+
+import android.graphics.Color
+import android.widget.ImageButton
+
+
 
 class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,12 +45,22 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         val foodMessage: String = intent.getStringExtra("food")
 
-        val food : Food? = db.findFood(foodMessage.toInt())
+        var food : Food? = db.findFood(foodMessage.toInt())
 
         foodName.text = food?.name
         foodItem_category.text = food?.category
         val bitmap: Bitmap? = food?.photo
         image.setImageBitmap(bitmap)
+
+        if(food?.shoppingList==1)
+            shoppingButton.setColorFilter(Color.argb(255, 0, 191, 255))
+        else
+            shoppingButton.setColorFilter(Color.argb(0, 0, 0, 0))
+
+        if(food?.favourite==1)
+            favButton.setColorFilter(Color.argb(255, 0, 191, 255))
+        else
+            favButton.setColorFilter(Color.argb(0, 0, 0, 0))
 
         //////////////////////////////////// BUTTONS /////////////////////////////////////
 
@@ -53,16 +70,29 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
 
         shoppingButton.setOnClickListener {
-            db.addFoodShopping(foodMessage.toInt())
+            food = if(food?.shoppingList==0) {
+                db.addFoodShopping(foodMessage.toInt())
+                shoppingButton.setColorFilter(Color.argb(255, 0, 191, 255))
+                db.findFood(foodMessage.toInt())
+            } else {
+                db.removeFoodShopping(foodMessage.toInt())
+                shoppingButton.setColorFilter(Color.argb(0, 0, 0, 0))
+                db.findFood(foodMessage.toInt())
+            }
         }
 
         favButton.setOnClickListener {
-            db.addFoodFavourites(foodMessage.toInt())
+            food = if(food?.favourite==0) {
+                db.addFoodFavourites(foodMessage.toInt())
+                favButton.setColorFilter(Color.argb(255, 0, 191, 255))
+                db.findFood(foodMessage.toInt())
+            } else {
+                db.removeFoodFavourites(foodMessage.toInt())
+                favButton.setColorFilter(Color.argb(0, 0, 0, 0))
+                db.findFood(foodMessage.toInt())
+            }
         }
 
-        removeFavourites.setOnClickListener {
-            db.removeFoodFavourites(foodMessage.toInt())
-        }
 
         addCupboard.setOnClickListener {
             db.addFoodCupboard(foodMessage.toInt())

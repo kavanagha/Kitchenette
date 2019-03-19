@@ -2,6 +2,7 @@ package com.kithcenette.kitchenette
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -45,7 +46,7 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         nav_view.setNavigationItemSelectedListener(this)
 
         /**************  FILL PAGE *******************************/
-        val recipe : Recipe? = db.findRecipe(id.toInt())
+        var recipe : Recipe? = db.findRecipe(id.toInt())
 
         recipeName.text = recipe?.name
         serving.text = recipe?.servings.toString()
@@ -60,13 +61,27 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         ingredientItem.adapter = IngredientAdapter(foodList, idList, this)
 
         /************************* Buttons ****************************/
+
+        if(recipe?.favourite==1)
+            favButton.setColorFilter(Color.argb(255, 0, 191, 255))
+        else
+            favButton.setColorFilter(Color.argb(0, 0, 0, 0))
+
         shoppingButton.setOnClickListener {
             for(i in 0..(foodList.size-1))
                 db.addFoodShopping(foodList[i].toInt())
         }
 
         favButton.setOnClickListener {
-            db.addRecipeFavourites(id.toInt())
+            recipe = if(recipe?.favourite==0) {
+                db.addRecipeFavourites(id.toInt())
+                favButton.setColorFilter(Color.argb(255, 0, 191, 255))
+                db.findRecipe(id.toInt())
+            } else {
+                db.removeRecipeFavourites(id.toInt())
+                favButton.setColorFilter(Color.argb(0, 0, 0, 0))
+                db.findRecipe(id.toInt())
+            }
         }
 
         db.close()
