@@ -48,7 +48,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         //////////////////////////////////// BUTTONS /////////////////////////////////////
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Update Quantity", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 

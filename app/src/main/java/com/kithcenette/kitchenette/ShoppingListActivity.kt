@@ -37,12 +37,6 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
-        ////////////////////////////////// FLOATING BUTTON ///////////////////////////
-
-        fab_search.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
 
         //////////////////////////////// NAVIGATION DRAWER /////////////////////////
 

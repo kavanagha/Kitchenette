@@ -23,11 +23,6 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setContentView(R.layout.activity_cupboard)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
         ////////////////// NAV DRAWER ////////////////////////////////
 
         val toggle = ActionBarDrawerToggle(
