@@ -175,7 +175,7 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         //image pick code
         private const val IMAGE_PICK_CODE = 1000
         //Permission code
-        private const val PERMISSION_CODE = 1001
+        internal const val PERMISSION_CODE = 1001
     }
 
     //handle requested permission result

@@ -2,7 +2,6 @@ package com.kithcenette.kitchenette
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -27,11 +26,8 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setSupportActionBar(toolbar)
 
         /************************ TAB  ACTIVITY ************************/
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
@@ -39,8 +35,8 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         /******************FLOATING ACTION BUTTON *************************/
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val menuIntent = Intent(this@CookbookActivity, AddRecipeActivity::class.java)
+            startActivity(menuIntent)
         }
 
         /************************ NAVIGATION DRAWER *************************/
@@ -51,6 +47,7 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
     }
 
 
