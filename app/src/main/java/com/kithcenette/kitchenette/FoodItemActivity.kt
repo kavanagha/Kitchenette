@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_food_item.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.app_bar_food_item.*
 import kotlinx.android.synthetic.main.content_food_item.*
 
 class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

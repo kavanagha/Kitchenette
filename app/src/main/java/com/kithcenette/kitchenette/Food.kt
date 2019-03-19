@@ -14,10 +14,10 @@ class Food {
     var bought: Int = 0 //bool
     var photo: Bitmap? = null
 
-    constructor(name:String, category:String){
+    constructor(name:String, category:String, photo : Bitmap){
         this.name = name
         this.category = category
-
+        this.photo = photo
     }
 
     constructor()

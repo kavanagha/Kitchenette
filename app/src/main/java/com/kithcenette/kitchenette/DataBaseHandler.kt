@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import java.util.ArrayList
+import android.graphics.Bitmap
+import java.io.ByteArrayOutputStream
+
 
 const val DATABASE_NAME = "kitchenette.db"
 
@@ -66,9 +69,14 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun insertFood(food: Food) : Long? {
         val db = this.writableDatabase
 
+        val bos = ByteArrayOutputStream()
+        food.photo?.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        val bArray = bos.toByteArray()
+
         val cv = ContentValues()
         cv.put(COL_FOOD_NAME, food.name)
         cv.put(COL_FOOD_CATEGORY, food.category)
+        cv.put(COL_FOOD_PHOTO, bArray)
 
         val result = db.insert(TABLE_FOOD,null,cv)
         return if(result == (-1).toLong()) {
