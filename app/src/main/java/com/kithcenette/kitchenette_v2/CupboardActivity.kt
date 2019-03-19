@@ -40,25 +40,9 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         nav_view.setNavigationItemSelectedListener(this)
 
         //////////////////// RECYCLER VIEW ////////////////////////////////////////
-        var message:String?
-
         addFoodItems()
         foodItem.layoutManager = LinearLayoutManager(this)
         foodItem.adapter = CupboardAdapter(list, this)
-
-
-       /* foodItem.addOnItemTouchListener(
-            RecyclerItemClickListener(
-                this@CupboardActivity,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        message = list[position]
-                        val intent = Intent(this@CupboardActivity, FoodItemActivity::class.java)
-                        intent.putExtra("food", message)
-                        startActivity(intent)
-                    }
-                })
-        )*/
 
     }
 
@@ -123,9 +107,9 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     //////////////////// RECYLER VIEW METHODS /////////////////////////////
     private fun addFoodItems(){
         val context = this
-        var db = DataBaseHandler(context)
+        val db = DataBaseHandler(context)
 
-        var data = db.readFoodCupboard()
+        val data = db.readFoodCupboard()
 
         for(i in 0..(data.size-1)){
             list.add(data[i].id.toString())

@@ -343,7 +343,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                 val food = Food()
                 food.name=it.getString(it.getColumnIndex(COL_FOOD_NAME))
                 food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
-                food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toInt()
+                food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toDouble()
                 food.measurement = it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
                 return food
             }
@@ -351,14 +351,14 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.close()
         return null
     }
-    fun addFoodQuantity(id:Int, qty:Int, msr:String){
+    fun addFoodQuantity(id:Int, qty:Double, msr:String){
         val db = this.writableDatabase
         val cv = ContentValues()
 
         val food : Food? = findFoodQuantity(id)
 
-        val old_qty : Int = food?.quantity!!.toInt()
-        val new_qty : Int = old_qty + qty
+        val old_qty : Double = food?.quantity!!.toDouble()
+        val new_qty : Double = old_qty + qty
 
         cv.put(COL_FOOD_QUANTITY,new_qty)
         cv.put(COL_FOOD_MEASUREMENT,msr)

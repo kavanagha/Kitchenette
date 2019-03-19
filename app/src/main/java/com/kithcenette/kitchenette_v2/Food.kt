@@ -9,7 +9,7 @@ class Food {
     var cupboard: Int = 0 //bool
     var favourite: Int = 0  //bool
     var shoppingList: Int = 0   //bool
-    var quantity: Int = 0
+    var quantity: Double = 0.0
     var measurement: String = ""
     var bought: Int = 0 //bool
     var photo: Bitmap? = null
@@ -20,6 +20,6 @@ class Food {
 
     }
 
-    constructor(){}
+    constructor()
 
 }

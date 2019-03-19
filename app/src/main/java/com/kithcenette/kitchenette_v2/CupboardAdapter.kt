@@ -73,7 +73,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
             add.setOnClickListener{
                 if(qty.text.toString().isNotEmpty() &&
                         s!!.isNotEmpty()){
-                    db.addFoodQuantity(id, qty.text.toString().toInt(),s.toString())
+                    db.addFoodQuantity(id, qty.text.toString().toDouble(),s.toString())
                     notifyDataSetChanged()
                     window.dismiss()
                 }

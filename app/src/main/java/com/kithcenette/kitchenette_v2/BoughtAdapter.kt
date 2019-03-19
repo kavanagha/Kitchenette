@@ -92,7 +92,7 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
             val add = view.findViewById<ImageButton>(R.id.add_qty_btn)
             add.setOnClickListener{
                 if(qty.text.toString().isNotEmpty() && s!!.isNotEmpty()){
-                    db.addFoodQuantity(id, qty.text.toString().toInt(),s.toString())
+                    db.addFoodQuantity(id, qty.text.toString().toDouble(),s.toString())
                     db.addFoodCupboard(id)
                     db.removeFoodBought(id)
                     items.remove(items[position])
