@@ -35,35 +35,8 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         /***************FLOATING ACTION BUTTONS ******************/
 
         // "Make This" Button
-        fab.setOnClickListener { view ->
-            deleteQuantity(id.toInt())
-            val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.add_shopping_popup,null)
-
-            window.isFocusable = true
-            window.isOutsideTouchable = true
-            window.width = LinearLayout.LayoutParams.MATCH_PARENT
-            window.update()
-
-            window.contentView = view
-
-            val foodItem = view.findViewById<RecyclerView>(R.id.ingredient_list)
-            foodItem.layoutManager = LinearLayoutManager(this)
-            foodItem.adapter = ShoppingPopupAdapter(foodList,  this)
-
-            //window.dismiss()
-            val add = view.findViewById<ImageButton>(R.id.add_all)
-            add.setOnClickListener{
-                for(i in 0..(foodList.size-1))
-                    db.addFoodShopping(foodList[i].toInt())
-                window.dismiss()
-            }
-
-            val close  = view.findViewById<ImageButton>(R.id.add_none)
-            close.setOnClickListener {
-                window.dismiss()
-            }
-            window.showAtLocation(root_layout, Gravity.CENTER,0,0)
+        fab.setOnClickListener {
+            makeThisPopup(id.toInt())
         }
         /*********************** NAVIGATION ***********************/
 
@@ -98,8 +71,7 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             favButton.setColorFilter(Color.argb(0, 0, 0, 0))
 
         shoppingButton.setOnClickListener {
-            for(i in 0..(foodList.size-1))
-                db.addFoodShopping(foodList[i].toInt())
+            shoppingPopup()
         }
 
         favButton.setOnClickListener {
@@ -115,17 +87,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         db.close()
-        /************************ TAB  ACTIVITY ***********************
-
-        val viewPager = findViewById<ViewPager>(R.id.pager)
-
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 2
-
-        val mTabLayout = findViewById<TabLayout>(R.id.pager_header)
-        mTabLayout.setupWithViewPager(viewPager)*/
-
     }
 
     /**************** NAVIGATION METHODS *****************/
@@ -138,7 +99,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
@@ -151,7 +111,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
                 val menuIntent = Intent(this@RecipeItemActivity, MainActivity::class.java)
@@ -202,70 +161,65 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    /**************** TAB ACTIVITY METHODS *****************
+    /**************** POPUP METHODS *****************/
 
-    internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
-        private val PAGE_COUNT = 2
+    private fun shoppingPopup(){
+        val context = this
+        val db = DataBaseHandler(context)
+        val window = PopupWindow(context)
+        val view = layoutInflater.inflate(R.layout.add_shopping_popup,null)
 
-        //private val PAGE_TITLES : ArrayList<String>? = null
-        private val PAGE_TITLES = arrayOf("Ingredients", "Method")
-        private val FRAGMENT_LIST : ArrayList<Fragment>? = null
+        window.isFocusable = true
+        window.isOutsideTouchable = true
+        window.width = LinearLayout.LayoutParams.MATCH_PARENT
+        window.update()
 
-        override fun getCount(): Int {
-            return PAGE_COUNT
+        window.contentView = view
+
+        val foodItem = view.findViewById<RecyclerView>(R.id.ingredient_list)
+        foodItem.layoutManager = LinearLayoutManager(this)
+        foodItem.adapter = ShoppingPopupAdapter(foodList,  this)
+
+        //window.dismiss()
+        val add = view.findViewById<ImageButton>(R.id.add_all)
+        add.setOnClickListener{
+            for(i in 0..(foodList.size-1))
+                db.addFoodShopping(foodList[i].toInt())
+            window.dismiss()
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return PAGE_TITLES[position]
+        val close  = view.findViewById<ImageButton>(R.id.add_none)
+        close.setOnClickListener {
+            window.dismiss()
         }
-
-        fun addFrag(fragment: Fragment) {
-            FRAGMENT_LIST?.add(fragment)
-         //   PAGE_TITLES?.add(title)
-        }
-
-        override fun getItem(position: Int): Fragment? {
-            return when (position) {
-                0 -> Fragment1()
-                1 -> Fragment2()
-                else -> null
-            }
-        }
+        db.close()
+        window.showAtLocation(root_layout, Gravity.CENTER,0,0)
     }
 
+    private fun makeThisPopup(id:Int){
+        val context = this
+        val db = DataBaseHandler(context)
+        val window = PopupWindow(context)
+        val view = layoutInflater.inflate(R.layout.make_this_popup,null)
 
-    class Fragment1 : Fragment() {
+        window.isFocusable = true
+        window.isOutsideTouchable = true
+        window.update()
 
-        private val list : ArrayList<String> = ArrayList()
+        window.contentView = view
 
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val rootView = inflater.inflate(R.layout.method_view, pager, true)
-            val recipeItem = rootView.findViewById(R.id.method) as TextView
-            recipeItem.text = "HEY"
-
-            return rootView
+        val make = view.findViewById<ImageButton>(R.id.make)
+        make.setOnClickListener{
+            deleteQuantity(id)
+            window.dismiss()
+            shoppingPopup()
         }
-    }
 
-    class Fragment2 : Fragment() {
-
-        private val list : ArrayList<String> = ArrayList()
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val rootView = inflater.inflate(R.layout.content_recipe_item, pager, false)
-           // val recipeItem = rootView.findViewById(R.id.recipeItem) as RecyclerView
-
-
-
-            return rootView
+        val close  = view.findViewById<ImageButton>(R.id.no_make)
+        close.setOnClickListener {
+            window.dismiss()
         }
+        db.close()
+        window.showAtLocation(root_layout, Gravity.CENTER,0,0)
     }
-
-    */
 }
