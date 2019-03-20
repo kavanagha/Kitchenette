@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import com.kithcenette.search.AutoCompleteFoodAdapter
 import kotlinx.android.synthetic.main.activity_cupboard.*
 import kotlinx.android.synthetic.main.app_bar_cupboard.*
 import kotlinx.android.synthetic.main.content_cupboard.*
@@ -16,14 +17,14 @@ import kotlinx.android.synthetic.main.content_cupboard.*
 class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val list : ArrayList<String> = ArrayList()
-
+    private val foodList : ArrayList<Food> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cupboard)
         setSupportActionBar(toolbar)
 
-        ////////////////// NAV DRAWER ////////////////////////////////
+        /**************************** NAV DRAWER ***********************************/
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -33,14 +34,30 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        //////////////////// RECYCLER VIEW ////////////////////////////////////////
+        /**************************** RECYCLER VIEW ***********************************/
         addFoodItems()
         foodItem.layoutManager = LinearLayoutManager(this)
         foodItem.adapter = CupboardAdapter(list, this)
 
+        /**************************** SEARCH METHODS ***********************************/
+
+        val adapter = AutoCompleteFoodAdapter(this, foodList)
+        autocompletetextview?.threshold=1
+        autocompletetextview?.setAdapter(adapter)
+        autocompletetextview?.setOnFocusChangeListener {
+                _, _ ->
+            autocompletetextview.setOnItemClickListener { _, _, _, _ ->
+                val db = DataBaseHandler(this)
+                val message = db.findFoodName(autocompletetextview.text.toString()).toString()
+                val intent = Intent(this@CupboardActivity, FoodItemActivity::class.java)
+                intent.putExtra("food", message)
+                this.startActivity(intent)
+            }
+        }
+
     }
 
-    //////////////////// GENERAL METHODS /////////////////////////
+    /**************************** GENERAL METHODS ***********************************/
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -50,22 +67,18 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    //////////////////// NAVIGATION DRAWER /////////////////////////
+    /**************************** NAVIGATION DRAWER ***********************************/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -98,7 +111,7 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         return true
     }
 
-    //////////////////// RECYLER VIEW METHODS /////////////////////////////
+    /**************************** RECYLER VIEW METHODS ***********************************/
     private fun addFoodItems(){
         val context = this
         val db = DataBaseHandler(context)
@@ -106,6 +119,7 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val data = db.readFoodCupboard()
 
         for(i in 0..(data.size-1)){
+            foodList.add(data[i])
             list.add(data[i].id.toString())
         }
     }

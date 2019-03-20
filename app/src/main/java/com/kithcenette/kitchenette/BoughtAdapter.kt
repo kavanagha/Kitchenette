@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import kotlinx.android.synthetic.main.add_quantity_popup.view.*
 import kotlinx.android.synthetic.main.bought_list_item.view.*
 
 class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
@@ -65,7 +66,6 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
             //items.remove(items[position])
             //notifyDataSetChanged()
 
-
             val window = PopupWindow(context)
             val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
 
@@ -75,10 +75,10 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
 
             window.contentView = view
 
-            val close = view.findViewById<ImageButton>(R.id.btn_close)
-            close.setOnClickListener {
-                window.dismiss()
-            }
+            val old_qty = view.findViewById<TextView>(R.id.old_qty)
+            old_qty.text  = food?.quantity.toString()
+            val old_msr = view.findViewById<TextView>(R.id.old_msr)
+            old_msr.text  = food?.measurement
 
             val spinner = view.findViewById<Spinner>(R.id.enter_measurement)
 

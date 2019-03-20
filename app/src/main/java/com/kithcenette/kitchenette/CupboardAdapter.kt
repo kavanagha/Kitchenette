@@ -2,6 +2,7 @@ package com.kithcenette.kitchenette
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -39,13 +40,15 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
     @SuppressLint("InflateParams")
     override fun onBindViewHolder(holder: ViewHolderCupboard, position: Int, payloads: MutableList<Any>) {
         val db = DataBaseHandler(context)
-        val food : Food? = db.findFoodQuantity(items[position].toInt())
+        val food : Food? = db.findFood(items[position].toInt())
         val id = items[position].toInt()
         val layoutInflater = LayoutInflater.from(context)
 
         holder.tvFoodItem.text = food?.name
         holder.tvQuantityItem.text = food?.quantity.toString()
         holder.tvMeasurement.text = food?.measurement
+        val bitmap: Bitmap? = food?.photo
+        holder.image.setImageBitmap(bitmap)
 
         holder.btnAddFood.setOnClickListener{
             val window = PopupWindow(context)
@@ -57,10 +60,10 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
             window.contentView = view
 
-            val close = view.findViewById<ImageButton>(R.id.btn_close)
-            close.setOnClickListener {
-                window.dismiss()
-            }
+            val old_qty = view.findViewById<TextView>(R.id.old_qty)
+            old_qty.text  = food?.quantity.toString()
+            val old_msr = view.findViewById<TextView>(R.id.old_msr)
+            old_msr.text  = food?.measurement
 
             val spinner = view.findViewById<Spinner>(R.id.enter_measurement)
 
@@ -83,6 +86,42 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
             window.showAtLocation(holder.layout, Gravity.CENTER,0,0)
         }
 
+        holder.btnDelFood.setOnClickListener {
+            val window = PopupWindow(context)
+            val view = layoutInflater.inflate(R.layout.remove_quantity_popup,null)
+
+            window.isFocusable = true
+            window.isOutsideTouchable = true
+            window.update()
+
+            window.contentView = view
+
+            val old_qty = view.findViewById<TextView>(R.id.old_qty)
+            old_qty.text  = food?.quantity.toString()
+            val old_msr = view.findViewById<TextView>(R.id.old_msr)
+            old_msr.text  = food?.measurement
+
+            val spinner = view.findViewById<Spinner>(R.id.enter_measurement)
+
+            spinner!!.onItemSelectedListener = this
+            val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, list)
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = aa
+
+            val qty = view.findViewById<EditText>(R.id.enter_quantity)
+
+            val add = view.findViewById<ImageButton>(R.id.add_qty_btn)
+            add.setOnClickListener{
+                if(qty.text.toString().isNotEmpty() &&
+                    s!!.isNotEmpty()){
+                    db.delFoodQuantity(id, qty.text.toString().toDouble(),s.toString())
+                    notifyDataSetChanged()
+                    window.dismiss()
+                }
+            }
+            window.showAtLocation(holder.layout, Gravity.CENTER,0,0)
+        }
+
 
     }
 }
@@ -92,6 +131,7 @@ class ViewHolderCupboard (view: View) : RecyclerView.ViewHolder(view) {
     val tvQuantityItem = view.tvQuantity!!
     val tvMeasurement = view.tvMeasurement!!
     val btnAddFood: ImageButton = view.openQuantityPopup!!
+    val btnDelFood: ImageButton = view.openDeleteQuantityPopup!!
     val layout  = view.root_layout!!
-
+    val image: ImageView = view.image_food_icon!!
 }

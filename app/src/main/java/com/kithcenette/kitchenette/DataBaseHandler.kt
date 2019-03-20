@@ -116,6 +116,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                     food.category=it.getString(it.getColumnIndex(COL_FOOD_CATEGORY))
                     food.shoppingList=it.getString(it.getColumnIndex(COL_FOOD_SHOPPING)).toInt()
                     food.favourite=it.getString(it.getColumnIndex(COL_FOOD_FAVOURITE)).toInt()
+                    food.quantity = it.getString(it.getColumnIndex(COL_FOOD_QUANTITY)).toDouble()
+                    food.measurement = it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
                     val image = it.getBlob(it.getColumnIndex(COL_FOOD_PHOTO))
                     if (image!=null)
                         food.photo = BitmapFactory.decodeByteArray(image, 0, image.size )
@@ -370,6 +372,28 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         cv.put(COL_FOOD_QUANTITY,new_qty)
         cv.put(COL_FOOD_MEASUREMENT,msr)
 
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun delFoodQuantity(id:Int, qty:Double, msr:String){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        val food : Food? = findFoodQuantity(id)
+
+        val old_qty : Double = food?.quantity!!.toDouble()
+        var new_qty : Double = old_qty - qty
+
+        if (new_qty <= 0.0)
+            new_qty = 0.0
+
+        cv.put(COL_FOOD_QUANTITY,new_qty)
+        cv.put(COL_FOOD_MEASUREMENT,msr)
         val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
         if(result >=1 ) {
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()

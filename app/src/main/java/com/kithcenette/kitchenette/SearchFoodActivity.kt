@@ -29,7 +29,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setContentView(R.layout.activity_search_food)
         setSupportActionBar(toolbar)
 
-        //////////////////////////// TAB ACTIVITY /////////////////////////////////////
+        /**************************** TAB ACTIVITY ***********************************/
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Setup spinner
@@ -43,25 +43,22 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                // When the given dropdown item is selected, show its contents in the
-                // container view.
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                     .commit()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
-
         }
 
-        /////////////////////////// FLOATING BUTTON ////////////////////////////////
+        /**************************** FLOATING BUTTON ***********************************/
 
         fab.setOnClickListener {
             val intent = Intent(this@SearchFoodActivity, AddFoodActivity::class.java)
             startActivity(intent)
         }
 
-        //////////////////////////// NAV DRAWER //////////////////////////////
+        /**************************** NAV DRAWER ***********************************/
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -71,15 +68,16 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        /**************************** SEARCH METHODS ***********************************/
+
         addFoodItems()
 
-        //val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,list)
         val adapter = AutoCompleteFoodAdapter(this, list)
         autocompletetextview?.threshold=1
         autocompletetextview?.setAdapter(adapter)
         autocompletetextview?.setOnFocusChangeListener {
-                view, b ->
-            autocompletetextview.setOnItemClickListener { parent, view, position, id ->
+                _, _ ->
+            autocompletetextview.setOnItemClickListener { _, _, _, _ ->
                 val db = DataBaseHandler(this)
                 val message = db.findFoodName(autocompletetextview.text.toString()).toString()
                 val intent = Intent(this@SearchFoodActivity, FoodItemActivity::class.java)
@@ -90,7 +88,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     }
 
-    //////////////////////////// STANDARD METHODS ////////////////////////////////////
+    /**************************** STANDARD METHODS ***********************************/
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -112,7 +110,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    //////////////////////////// NAV DRAWER METHODS ///////////////////////////////////
+    /**************************** NAV DRAWER METHODS ***********************************/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -145,7 +143,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
+    /****************************ADD FOOD ITEMS TO LIST METHODS***********************************/
     private fun addFoodItems() {
         val context = this
         val db = DataBaseHandler(context)
@@ -157,7 +155,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    ////////////////////////// ADAPTER CLASS ////////////////////////////////////
+    /**************************** ADAPTER CLASS ***********************************/
     private class MyAdapter(context: Context, objects: Array<String>) :
         ArrayAdapter<String>(context, R.layout.list_item, objects), ThemedSpinnerAdapter {
         private val mDropDownHelper: ThemedSpinnerAdapter.Helper = ThemedSpinnerAdapter.Helper(context)
@@ -187,7 +185,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    //////////////////////////////// FRAGMENT CLASS ////////////////////////////////
+    /**************************** FRAGMENT CLASS ***********************************/
 
     /**
      * A placeholder fragment containing a simple view.
