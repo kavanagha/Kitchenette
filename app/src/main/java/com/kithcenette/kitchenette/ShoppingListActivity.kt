@@ -116,8 +116,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1)
         }
 
@@ -138,11 +137,13 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
 
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data : MutableList<Food>
+
             if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
                 //addShoppingItems()
-                val context = activity!!.applicationContext
-                val db = DataBaseHandler(context)
-                val data = db.readShopping()
+                data = db.readShopping()
 
                 for(i in 0..(data.size-1))
                     list.add(data[i].id.toString())
@@ -152,9 +153,7 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
             else{
                 //addBoughtItems()
-                val context = activity!!.applicationContext
-                val db = DataBaseHandler(context)
-                val data = db.readBought()
+                data = db.readBought()
 
                 for(i in 0..(data.size-1))
                     list.add(data[i].id.toString())
@@ -167,16 +166,8 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         }
 
         companion object {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.
-             */
             private const val ARG_SECTION_NUMBER = "section_number"
 
-            /**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             */
             fun newInstance(sectionNumber: Int): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
                 val args = Bundle()

@@ -62,10 +62,6 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
         }
 
         holder.buttonAddCupboard.setOnClickListener{
-            //db.addFoodCupboard(id)
-            //items.remove(items[position])
-            //notifyDataSetChanged()
-
             val window = PopupWindow(context)
             val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
 

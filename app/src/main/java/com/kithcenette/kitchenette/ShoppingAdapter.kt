@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.shopping_list_item.view.*
 class ShoppingAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderShop>() {
 
-    private val adapter = this
+    val adapter = this
 
     override fun onBindViewHolder(p0: ViewHolderShop, p1: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
