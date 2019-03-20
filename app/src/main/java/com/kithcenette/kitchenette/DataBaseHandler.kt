@@ -378,6 +378,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         } else {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         }
+        addFoodCupboard(id)
         db.close()
     }
     fun delFoodQuantity(id:Int, qty:Double, msr:String){
@@ -389,8 +390,10 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val old_qty : Double = food?.quantity!!.toDouble()
         var new_qty : Double = old_qty - qty
 
-        if (new_qty <= 0.0)
+        if (new_qty <= 0.0) {
             new_qty = 0.0
+            removeFoodCupboard(id)
+        }
 
         cv.put(COL_FOOD_QUANTITY,new_qty)
         cv.put(COL_FOOD_MEASUREMENT,msr)

@@ -122,6 +122,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 if(qty.text.toString().isNotEmpty() &&
                     s!!.isNotEmpty()){
                     db.addFoodQuantity(id, qty.text.toString().toDouble(),s.toString())
+                    db.addFoodCupboard(id)
                     this.recreate()
                     window.dismiss()
                 }

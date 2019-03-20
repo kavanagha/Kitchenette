@@ -9,7 +9,9 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_recipe_item.*
 import kotlinx.android.synthetic.main.app_bar_recipe_item.*
 import kotlinx.android.synthetic.main.content_recipe_item.*
@@ -32,8 +34,36 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         /***************FLOATING ACTION BUTTONS ******************/
 
+        // "Make This" Button
         fab.setOnClickListener { view ->
             deleteQuantity(id.toInt())
+            val window = PopupWindow(context)
+            val view = layoutInflater.inflate(R.layout.add_shopping_popup,null)
+
+            window.isFocusable = true
+            window.isOutsideTouchable = true
+            window.width = LinearLayout.LayoutParams.MATCH_PARENT
+            window.update()
+
+            window.contentView = view
+
+            val foodItem = view.findViewById<RecyclerView>(R.id.ingredient_list)
+            foodItem.layoutManager = LinearLayoutManager(this)
+            foodItem.adapter = ShoppingPopupAdapter(foodList,  this)
+
+            //window.dismiss()
+            val add = view.findViewById<ImageButton>(R.id.add_all)
+            add.setOnClickListener{
+                for(i in 0..(foodList.size-1))
+                    db.addFoodShopping(foodList[i].toInt())
+                window.dismiss()
+            }
+
+            val close  = view.findViewById<ImageButton>(R.id.add_none)
+            close.setOnClickListener {
+                window.dismiss()
+            }
+            window.showAtLocation(root_layout, Gravity.CENTER,0,0)
         }
         /*********************** NAVIGATION ***********************/
 
