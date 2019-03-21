@@ -38,7 +38,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
                 "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
-                "Spices, Herbs & Seasonings","Sweeteners","Vegetables","Wheat")
+                "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
         )
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -206,7 +206,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             val categoryArray = arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
                 "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
-                "Spices, Herbs & Seasonings","Sweeteners","Vegetables","Wheat")
+                "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
 
             if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
                 addAllFoodItems()
