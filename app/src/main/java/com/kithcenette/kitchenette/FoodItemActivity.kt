@@ -22,7 +22,8 @@ import android.widget.*
 class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     AdapterView.OnItemSelectedListener {
 
-    var list = arrayOf("grams","litres")
+    var list = arrayOf("cup","dessertspoon","fl. oz",
+        "grams","kg","litres","ml","oz","pint","tbsp","tsp", "whole")
     var s : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

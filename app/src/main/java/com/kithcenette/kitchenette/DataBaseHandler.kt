@@ -365,13 +365,18 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val cv = ContentValues()
 
         val food : Food? = findFoodQuantity(id)
+        val m : String? = findMeasurement(id)
 
-        val old_qty : Double = food?.quantity!!.toDouble()
-        val new_qty : Double = old_qty + qty
+        val oldqty : Double = food?.quantity!!.toDouble()
+        val oldG = Measurements(oldqty, m!!, "grams")
+        oldG.convert()
+        val newG = Measurements(qty, msr, "grams")
+        newG.convert()
+        val newqty : Double = oldG.quantity + newG.quantity
+        val resultQty = Measurements(newqty, "grams", m)
+        resultQty.convert()
 
-        cv.put(COL_FOOD_QUANTITY,new_qty)
-        cv.put(COL_FOOD_MEASUREMENT,msr)
-
+        cv.put(COL_FOOD_QUANTITY,resultQty.quantity)
         val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
         if(result >=1 ) {
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
@@ -386,17 +391,23 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val cv = ContentValues()
 
         val food : Food? = findFoodQuantity(id)
+        val m : String? = findMeasurement(id)
 
-        val old_qty : Double = food?.quantity!!.toDouble()
-        var new_qty : Double = old_qty - qty
+        val oldqty : Double = food?.quantity!!
+        val oldG = Measurements(oldqty, m!!, "grams")
+        oldG.convert()
+        val newG = Measurements(qty, msr, "grams")
+        newG.convert()
+        val newqty : Double = oldG.quantity - newG.quantity
+        val resultQty = Measurements(newqty, "grams", m)
+        resultQty.convert()
 
-        if (new_qty <= 0.0) {
-            new_qty = 0.0
+        if (resultQty.quantity <= 0.0) {
+            resultQty.quantity = 0.0
             removeFoodCupboard(id)
         }
 
-        cv.put(COL_FOOD_QUANTITY,new_qty)
-        cv.put(COL_FOOD_MEASUREMENT,msr)
+        cv.put(COL_FOOD_QUANTITY,resultQty.quantity)
         val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
         if(result >=1 ) {
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
@@ -407,6 +418,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     }
     fun setFoodQuantity(id:Int, qty:Double){
         val db = this.writableDatabase
+
+        val msr: String? = findMeasurement(id)
 
         val cv = ContentValues()
         cv.put(COL_FOOD_QUANTITY, qty)
@@ -419,6 +432,19 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         }
         db.close()
     }
+
+    fun findMeasurement(id : Int) : String?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()){
+                return it.getString(it.getColumnIndex(COL_FOOD_MEASUREMENT))
+            }
+        }
+        db.close()
+        return null
+    }
+
 
     /****************** RECIPES TABLE *******************/
     fun readRecipeData() : MutableList<Recipe>{
@@ -530,7 +556,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.rawQuery(query, arrayOf(id.toString())).use{
             if (it.moveToFirst()){
                 val ingredient = Ingredients()
-                ingredient.quantity = it.getString(it.getColumnIndex(COL_INGREDIENT_QUANTITY)).toInt()
+                ingredient.quantity = it.getString(it.getColumnIndex(COL_INGREDIENT_QUANTITY)).toDouble()
                 ingredient.measurement = it.getString(it.getColumnIndex(COL_INGREDIENT_MEASUREMENT))
                 return ingredient
             }
@@ -541,20 +567,12 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
 
     fun removeQuantityCupboard(iId:Int, fId:Int){
         val db = this.readableDatabase
-        val food = findFoodQuantity(fId)
         val ingredient = findIngredient((iId))
 
-        val fQuantity = food!!.quantity.toDouble()
-        val iQuantity = ingredient!!.quantity.toDouble()
-        val newQuantity: Double = fQuantity.minus(iQuantity)
+        val iQuantity = ingredient!!.quantity
+        val msr : String? = findMeasurement(iId)
+        delFoodQuantity(fId, iQuantity, msr!!)
 
-        if (newQuantity <= 0.0){
-            setFoodQuantity(fId, 0.0)
-            removeFoodCupboard(fId)
-        }
-        else{
-            setFoodQuantity(fId,newQuantity)
-        }
         db.close()
     }
 

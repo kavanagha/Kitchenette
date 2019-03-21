@@ -16,7 +16,8 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderBought>(), AdapterView.OnItemSelectedListener {
 
     private val adapter = this
-    private var list = arrayOf("grams","litres")
+    private var list = arrayOf("cup","dessertspoon","fl. oz",
+        "grams","kg","litres","ml","oz","pint","tbsp","tsp", "whole")
     private var s : String? = null
 
     override fun onBindViewHolder(p0: ViewHolderBought, p1: Int) {    }
