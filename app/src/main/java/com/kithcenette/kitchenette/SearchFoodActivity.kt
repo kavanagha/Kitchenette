@@ -37,7 +37,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             toolbar.context,
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-                "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+                "Desserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
                 "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
         )
 
@@ -205,7 +205,7 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             val categoryArray = arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
                 "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-                "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+                "Desserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
                 "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
 
             if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {

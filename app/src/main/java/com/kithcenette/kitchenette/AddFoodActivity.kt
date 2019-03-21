@@ -28,7 +28,7 @@ class AddFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     var categoryList = arrayOf("Baking & Grains","Beans & Legumes","Beverages",
         "Broths & Soups","Condiments & Sauces","Dairy","Dairy Alternatives",
-        "Deserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
+        "Desserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
         "Spices, Herbs, Seasonings","Sweeteners","Vegetables")
     var categorySelected : String? = null
 
