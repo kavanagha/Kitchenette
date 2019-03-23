@@ -9,13 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.kithcenette.kitchenette.R
 import kotlinx.android.synthetic.main.cupboard_list_item.view.*
 
 class CupboardAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderCupboard>(), AdapterView.OnItemSelectedListener {
 
-    private var list = arrayOf("grams","litres")
+    private var list = arrayOf("cup","dessertspoon","fl. oz",
+        "grams","kg","litres","ml","oz","pint","tbsp","tsp", "whole")
     private var s : String? = null
 
     override fun onBindViewHolder(p0: ViewHolderCupboard, p1: Int) {    }
@@ -24,7 +24,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         return items.size
     }
 
-    ///////////////// SPINNER METHODS ///////////////////////////////
+    /***************************** SPINNER METHODS **************************************/
     override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
         s = list[position]
     }
@@ -60,10 +60,10 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
             window.contentView = view
 
-            val old_qty = view.findViewById<TextView>(R.id.old_qty)
-            old_qty.text  = food?.quantity.toString()
-            val old_msr = view.findViewById<TextView>(R.id.old_msr)
-            old_msr.text  = food?.measurement
+            val oqty = view.findViewById<TextView>(R.id.old_qty)
+            oqty.text  = food?.quantity.toString()
+            val omsr = view.findViewById<TextView>(R.id.old_msr)
+            omsr.text  = food?.measurement
 
             val spinner = view.findViewById<Spinner>(R.id.enter_measurement)
 
@@ -96,10 +96,10 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
             window.contentView = view
 
-            val old_qty = view.findViewById<TextView>(R.id.old_qty)
-            old_qty.text  = food?.quantity.toString()
-            val old_msr = view.findViewById<TextView>(R.id.old_msr)
-            old_msr.text  = food?.measurement
+            val oqty = view.findViewById<TextView>(R.id.old_qty)
+            oqty.text  = food?.quantity.toString()
+            val omsr = view.findViewById<TextView>(R.id.old_msr)
+            omsr.text  = food?.measurement
 
             val spinner = view.findViewById<Spinner>(R.id.enter_measurement)
 
@@ -115,14 +115,18 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
                 if(qty.text.toString().isNotEmpty() &&
                     s!!.isNotEmpty()){
                     db.delFoodQuantity(id, qty.text.toString().toDouble(),s.toString())
+                    val f : Food? = db.findFood(id)
+                    if(f?.quantity == 0.0) {
+                        items.remove(items[position])
+                        db.addFoodShopping(id)
+                    }
                     notifyDataSetChanged()
                     window.dismiss()
                 }
             }
             window.showAtLocation(holder.layout, Gravity.CENTER,0,0)
         }
-
-
+        db.close()
     }
 }
 

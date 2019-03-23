@@ -125,36 +125,35 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         ): View? {
             val rootView = inflater.inflate(R.layout.content_cookbook, container, false)
             val recipeItem = rootView.findViewById(R.id.recipeItem) as RecyclerView
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data : MutableList<Recipe>
 
-            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
-
+            data = if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                db.suggestRecipes()
+            } else{
+                db.readRecipeData()
             }
-            else{
-                val context = activity!!.applicationContext
-                val db = DataBaseHandler(context)
-                val data = db.readRecipeData()
 
-                for(i in 0..(data.size-1))
-                    list.add(data[i].id.toString())
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
 
-                recipeItem.layoutManager = LinearLayoutManager(activity)
-                recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+            recipeItem.layoutManager = LinearLayoutManager(activity)
+            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
 
-                var message:String?
-                recipeItem.addOnItemTouchListener(
-                    RecyclerItemClickListener(
-                        activity!!.applicationContext,
-                        object : RecyclerItemClickListener.OnItemClickListener {
-                            override fun onItemClick(view: View, position: Int) {
-                                message = list[position]
-                                val intent = Intent(activity!!.applicationContext, RecipeItemActivity::class.java)
-                                intent.putExtra("recipe", message)
-                                startActivity(intent)
-                            }
-                        })
-                )
-
-            }
+            var message:String?
+            recipeItem.addOnItemTouchListener(
+                RecyclerItemClickListener(
+                    activity!!.applicationContext,
+                    object : RecyclerItemClickListener.OnItemClickListener {
+                        override fun onItemClick(view: View, position: Int) {
+                            message = list[position]
+                            val intent = Intent(activity!!.applicationContext, RecipeItemActivity::class.java)
+                            intent.putExtra("recipe", message)
+                            startActivity(intent)
+                        }
+                    })
+            )
 
             return rootView
         }

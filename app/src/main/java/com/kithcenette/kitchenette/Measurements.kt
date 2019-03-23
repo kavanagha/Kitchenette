@@ -1,7 +1,7 @@
 package com.kithcenette.kitchenette
 
 class Measurements{
-    var quantity:Double = 0.0
+    var quantity : Double = 0.0
     var type : String = ""
     var desired : String = ""
 

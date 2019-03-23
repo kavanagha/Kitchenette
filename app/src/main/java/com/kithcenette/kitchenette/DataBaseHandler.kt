@@ -9,6 +9,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import java.util.ArrayList
 import android.graphics.Bitmap
 import java.io.ByteArrayOutputStream
+import kotlin.math.log2
 
 
 const val DATABASE_NAME = "kitchenette.db"
@@ -59,12 +60,9 @@ const val COL_DIET_RECIPE = "recipeID"
 
 class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, 1){
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {    }
 
-
-    ///////////////// FOOD TABLE /////////////////
+    /****************** FOOD TABLE *******************/
 
     fun insertFood(food: Food) : Long? {
         val db = this.writableDatabase
@@ -311,7 +309,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         }
         db.close()
     }
-    fun removeFoodCupboard(id:Int){
+    private fun removeFoodCupboard(id:Int){
         val db = this.writableDatabase
 
         val cv = ContentValues()
@@ -343,7 +341,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         return list
     }
 
-    fun findFoodQuantity(id : Int) : Food? {
+    private fun findFoodQuantity(id : Int) : Food? {
         val db = this.readableDatabase
 
         val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
@@ -403,23 +401,33 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         resultQty.convert()
 
         if (resultQty.quantity <= 0.0) {
-            resultQty.quantity = 0.0
+            setFoodQuantity(id,0.0)
             removeFoodCupboard(id)
         }
-
-        cv.put(COL_FOOD_QUANTITY,resultQty.quantity)
-        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
-        if(result >=1 ) {
-            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        else{
+            cv.put(COL_FOOD_QUANTITY,resultQty.quantity)
+            db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
         }
         db.close()
     }
-    fun setFoodQuantity(id:Int, qty:Double){
-        val db = this.writableDatabase
+    private fun checkDelFoodQuantity(id:Int, qty:Double, msr:String) : Boolean{
+        val food : Food? = findFoodQuantity(id)
+        val m : String? = findMeasurement(id)
 
-        val msr: String? = findMeasurement(id)
+        val oldqty : Double = food?.quantity!!
+        val oldG = Measurements(oldqty, m!!, "grams")
+        oldG.convert()
+        val newG = Measurements(qty, msr, "grams")
+        newG.convert()
+        val newqty : Double = oldG.quantity - newG.quantity
+        val resultQty = Measurements(newqty, "grams", m)
+        val convert = resultQty.convert()
+
+        return resultQty.quantity >= 0.0
+    }
+
+    private fun setFoodQuantity(id:Int, qty:Double){
+        val db = this.writableDatabase
 
         val cv = ContentValues()
         cv.put(COL_FOOD_QUANTITY, qty)
@@ -432,8 +440,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         }
         db.close()
     }
-
-    fun findMeasurement(id : Int) : String?{
+    private fun findMeasurement(id : Int) : String?{
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_ID = ?"
         db.rawQuery(query, arrayOf(id.toString())).use{
@@ -450,7 +457,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     fun readRecipeData() : MutableList<Recipe>{
         val list : MutableList<Recipe> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_RECIPE ORDER BY $COL_RECIPE_NAME"
+        val query = "SELECT * FROM $TABLE_RECIPE ORDER BY $COL_RECIPE_FAVOURITE, $COL_RECIPE_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
@@ -532,6 +539,39 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         return list
     }
 
+    fun suggestRecipes():MutableList<Recipe>{
+        val cupboard : MutableList<Food> = readFoodCupboard()
+        val suggested : MutableList<Recipe> = ArrayList()
+        val recipes : MutableList<Recipe> = readRecipeData()
+
+        for(i in 0..(recipes.size-1)){
+            val recipe : Recipe = recipes[i]
+            val ingredientList : MutableList<Ingredients> = readIngredients(recipe.id)
+            var valid = false
+            for( j in 0..(ingredientList.size-1)){
+                val ingredients : Ingredients =ingredientList[j]
+                var found = false
+                for (x in 0..(cupboard.size-1)){
+                    if (ingredients.foodID == cupboard[x].id){
+                        if(checkDelFoodQuantity(ingredients.foodID, ingredients.quantity, ingredients.measurement)) {
+                            found = true
+                            break
+                        }
+                    }
+                }
+                if(!found){
+                   valid = false
+                    break
+                }
+                else
+                    valid = true
+            }
+            if(valid)
+                suggested.add(recipe)
+        }
+        return suggested
+    }
+
     /************************ INGREDIENTS TABLE ********************************/
     fun readIngredients(id:Int) : MutableList<Ingredients>{
         val list : MutableList<Ingredients> = ArrayList()
@@ -570,7 +610,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val ingredient = findIngredient((iId))
 
         val iQuantity = ingredient!!.quantity
-        val msr : String? = findMeasurement(iId)
+        val msr : String? = ingredient.measurement
         delFoodQuantity(fId, iQuantity, msr!!)
 
         db.close()
