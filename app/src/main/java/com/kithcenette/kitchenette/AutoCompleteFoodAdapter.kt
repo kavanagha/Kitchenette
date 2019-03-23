@@ -14,7 +14,7 @@ import com.kithcenette.kitchenette.R
 import java.util.*
 
 class AutoCompleteFoodAdapter(private val context: Activity, private var foodItems : ArrayList<Food>)
-    : ArrayAdapter<Food>(context, R.layout.food_list_item, foodItems) {
+    : ArrayAdapter<Food>(context, R.layout.list_item_food, foodItems) {
 
 
     private var resultList: MutableList<Food> = ArrayList()
@@ -34,7 +34,7 @@ class AutoCompleteFoodAdapter(private val context: Activity, private var foodIte
         if (view == null) {
             val inflater = context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.food_list_item, parent, false)
+            view = inflater.inflate(R.layout.list_item_food, parent, false)
         }
 
         val db = DataBaseHandler(context)

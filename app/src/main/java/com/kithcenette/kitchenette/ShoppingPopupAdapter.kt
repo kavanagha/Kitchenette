@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.popup_shopping_item.view.*
+import kotlinx.android.synthetic.main.list_item_shopping_popup.view.*
 
 
 class ShoppingPopupAdapter(private val items : ArrayList<String>,val context: Context)
@@ -23,7 +23,7 @@ class ShoppingPopupAdapter(private val items : ArrayList<String>,val context: Co
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingPopupHolder {
         return ShoppingPopupHolder(
-            LayoutInflater.from(context).inflate(R.layout.popup_shopping_item,
+            LayoutInflater.from(context).inflate(R.layout.list_item_shopping_popup,
                 parent, false))
     }
 

@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.ingredient_item.view.*
+import kotlinx.android.synthetic.main.list_item_ingredient.view.*
 
 
 class IngredientAdapter(private val items : ArrayList<String>,
@@ -21,7 +21,7 @@ class IngredientAdapter(private val items : ArrayList<String>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
-        return IngredientViewHolder(LayoutInflater.from(context).inflate(R.layout.ingredient_item,
+        return IngredientViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_ingredient,
             parent, false))
     }
 

@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.cupboard_list_item.view.*
+import kotlinx.android.synthetic.main.list_item_cupboard.view.*
 
 class CupboardAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderCupboard>(), AdapterView.OnItemSelectedListener {
@@ -33,7 +33,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCupboard {
         return ViewHolderCupboard(LayoutInflater.from(context).inflate(
-            R.layout.cupboard_list_item,
+            R.layout.list_item_cupboard,
             parent, false))
     }
 

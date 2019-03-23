@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.bought_list_item.view.*
+import kotlinx.android.synthetic.main.list_item_bought.view.*
 
 class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
     : RecyclerView.Adapter<ViewHolderBought>(), AdapterView.OnItemSelectedListener {
@@ -26,7 +26,7 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderBought {
-        return ViewHolderBought(LayoutInflater.from(context).inflate(R.layout.bought_list_item,
+        return ViewHolderBought(LayoutInflater.from(context).inflate(R.layout.list_item_bought,
             parent, false))
     }
 

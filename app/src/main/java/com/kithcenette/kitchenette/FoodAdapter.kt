@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.food_list_item.view.*
+import kotlinx.android.synthetic.main.list_item_food.view.*
 
 
 class FoodAdapter(private val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
@@ -21,7 +21,7 @@ class FoodAdapter(private val items : ArrayList<String>, val context: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.food_list_item, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_food, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {

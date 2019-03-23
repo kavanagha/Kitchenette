@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import kotlinx.android.synthetic.main.shopping_list_item.view.*
+import kotlinx.android.synthetic.main.list_item_shopping.view.*
 
 
 class ShoppingAdapter(private val items : ArrayList<String>, val context: Context)
@@ -24,7 +24,7 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderShop {
-        return ViewHolderShop(LayoutInflater.from(context).inflate(R.layout.shopping_list_item,
+        return ViewHolderShop(LayoutInflater.from(context).inflate(R.layout.list_item_shopping,
             parent, false))
     }
 

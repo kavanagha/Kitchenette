@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_recipe_item.*
 import kotlinx.android.synthetic.main.app_bar_recipe_item.*
 import kotlinx.android.synthetic.main.content_recipe_item.*
 
-
 class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val foodList : ArrayList<String> = ArrayList()
@@ -200,7 +199,7 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val context = this
         val db = DataBaseHandler(context)
         val window = PopupWindow(context)
-        val view = layoutInflater.inflate(R.layout.popup_make_thisxml,null)
+        val view = layoutInflater.inflate(R.layout.popup_make_this,null)
 
         window.isFocusable = true
         window.isOutsideTouchable = true
