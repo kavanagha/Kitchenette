@@ -16,7 +16,7 @@ class Recipe{
 
 
     constructor(name:String, mealType:String, cuisine:String, servings:Int,
-                description:String, method:String){
+                description:String, method:String, photo: Bitmap){
         this.name = name
         this.mealType = mealType
         this.cuisine = cuisine
@@ -25,6 +25,7 @@ class Recipe{
         this.method = method
       //  this.favourite = favourite
         this.servings = servings
+        this.photo = photo
     }
 
     constructor(){}

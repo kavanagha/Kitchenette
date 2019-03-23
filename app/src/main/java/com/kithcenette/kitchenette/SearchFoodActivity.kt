@@ -187,9 +187,6 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     /**************************** FRAGMENT CLASS ***********************************/
 
-    /**
-     * A placeholder fragment containing a simple view.
-     * */
     class PlaceholderFragment : Fragment() {
 
         val list : ArrayList<String> = ArrayList()
@@ -262,16 +259,9 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         companion object {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.
-             */
+
             private const val ARG_SECTION_NUMBER = "section_number"
 
-            /**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             */
             fun newInstance(sectionNumber: Int): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
                 val args = Bundle()

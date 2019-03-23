@@ -454,6 +454,32 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
 
 
     /****************** RECIPES TABLE *******************/
+    fun insertRecipe(recipe:Recipe) : Long?{
+        val db = this.writableDatabase
+        val bos = ByteArrayOutputStream()
+
+        recipe.photo?.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        val bArray = bos.toByteArray()
+        val cv = ContentValues()
+
+        cv.put(COL_RECIPE_NAME, recipe.name)
+        cv.put(COL_RECIPE_METHOD,recipe.method)
+        cv.put(COL_RECIPE_CUISINE, recipe.cuisine)
+        cv.put(COL_RECIPE_DESCRIPTION, recipe.description)
+        cv.put(COL_RECIPE_MEAL, recipe.mealType)
+        cv.put(COL_RECIPE_PHOTO, bArray)
+        cv.put(COL_RECIPE_SERVINGS, recipe.servings)
+
+        val result = db.insert(TABLE_RECIPE, null, cv)
+        return if(result == (-1).toLong()) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+            null
+        } else {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+            result
+        }
+    }
+
     fun readRecipeData() : MutableList<Recipe>{
         val list : MutableList<Recipe> = ArrayList()
         val db = this.readableDatabase
@@ -573,6 +599,17 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
     }
 
     /************************ INGREDIENTS TABLE ********************************/
+    fun insertIngredient(ingredients: Ingredients){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put(COL_INGREDIENT_RECIPE, ingredients.recipeID)
+        cv.put(COL_INGREDIENT_FOOD, ingredients.foodID)
+        cv.put(COL_INGREDIENT_QUANTITY, ingredients.quantity)
+        cv.put(COL_INGREDIENT_MEASUREMENT, ingredients.measurement)
+
+        db.insert(TABLE_INGREDIENT, null, cv)
+    }
     fun readIngredients(id:Int) : MutableList<Ingredients>{
         val list : MutableList<Ingredients> = ArrayList()
         val db = this.readableDatabase
@@ -614,6 +651,17 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         delFoodQuantity(fId, iQuantity, msr!!)
 
         db.close()
+    }
+
+    /************************ DIET TABLE ********************************/
+    fun insertDiet(diet: Diet){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put(COL_DIET_NAME, diet.name)
+        cv.put(COL_DIET_RECIPE, diet.recipeID)
+
+        db.insert(TABLE_DIET, null, cv)
     }
 
     /************************** BARCODE TABLE **************************************/

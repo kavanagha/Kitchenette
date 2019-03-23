@@ -3,10 +3,10 @@ package com.kithcenette.kitchenette
 class Diet{
     var id: Int = 0
     var name: String = ""
-    var recipeID: Int = 0
+    var recipeID: Long = 0
 
 
-    constructor(name:String, recipeID:Int){
+    constructor(name:String, recipeID:Long){
         this.name = name
         this.recipeID=recipeID
     }
