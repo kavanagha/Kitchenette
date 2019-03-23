@@ -167,7 +167,7 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val context = this
         val db = DataBaseHandler(context)
         val window = PopupWindow(context)
-        val view = layoutInflater.inflate(R.layout.add_shopping_popup,null)
+        val view = layoutInflater.inflate(R.layout.popup_add_shopping,null)
 
         window.isFocusable = true
         window.isOutsideTouchable = true
@@ -200,7 +200,7 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val context = this
         val db = DataBaseHandler(context)
         val window = PopupWindow(context)
-        val view = layoutInflater.inflate(R.layout.make_this_popup,null)
+        val view = layoutInflater.inflate(R.layout.popup_make_thisxml,null)
 
         window.isFocusable = true
         window.isOutsideTouchable = true

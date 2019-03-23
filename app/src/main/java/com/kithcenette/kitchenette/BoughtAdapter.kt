@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.add_quantity_popup.view.*
 import kotlinx.android.synthetic.main.bought_list_item.view.*
 
 class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
@@ -64,7 +63,7 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
 
         holder.buttonAddCupboard.setOnClickListener{
             val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
+            val view = layoutInflater.inflate(R.layout.popup_add_quantity,null)
 
             window.isFocusable = true
             window.isOutsideTouchable = true

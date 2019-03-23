@@ -52,7 +52,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
         holder.btnAddFood.setOnClickListener{
             val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
+            val view = layoutInflater.inflate(R.layout.popup_add_quantity,null)
 
             window.isFocusable = true
             window.isOutsideTouchable = true
@@ -88,7 +88,7 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
 
         holder.btnDelFood.setOnClickListener {
             val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.remove_quantity_popup,null)
+            val view = layoutInflater.inflate(R.layout.popup_remove_quantity,null)
 
             window.isFocusable = true
             window.isOutsideTouchable = true

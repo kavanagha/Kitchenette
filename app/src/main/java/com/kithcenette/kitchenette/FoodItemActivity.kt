@@ -3,16 +3,13 @@ package com.kithcenette.kitchenette
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_food_item.*
 import kotlinx.android.synthetic.main.app_bar_food_item.*
 import kotlinx.android.synthetic.main.content_food_item.*
-import kotlinx.android.synthetic.main.nav_header.*
 
 import android.graphics.Color
 import android.view.*
@@ -96,7 +93,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         addCupboard.setOnClickListener {
 
             val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.add_quantity_popup,null)
+            val view = layoutInflater.inflate(R.layout.popup_add_quantity,null)
 
             window.isFocusable = true
             window.isOutsideTouchable = true
@@ -133,7 +130,7 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         removeCupboard.setOnClickListener {
             val window = PopupWindow(context)
-            val view = layoutInflater.inflate(R.layout.remove_quantity_popup,null)
+            val view = layoutInflater.inflate(R.layout.popup_remove_quantity,null)
 
             window.isFocusable = true
             window.isOutsideTouchable = true
