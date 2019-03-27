@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_barcode_history.*
@@ -22,9 +23,9 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         setContentView(R.layout.activity_barcode_history)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+            val intent = Intent(this@BarcodeHistoryActivity, ScanBarcodeActivity::class.java)
+            startActivity(intent)
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -35,25 +36,12 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        view_barcode.text="Barcodes Here"
-
-        /*
-        val context = this
-        var db = DataBaseHandler(context)
-
-        var bar = Barcodes(123456)
-        db.insertBarcode(bar)
-
-        var data: MutableList<Barcodes> = db.readBarcodeData()
-        view_barcode.text=""
-        if(data.isNotEmpty()){
-            for(i in 0..(data.size-1)){
-                view_barcode.append(data[i].id.toString() + " " + data[i].barcode.toString() +  "\n")
-            }
-        }*/
+        addBarcodeItems()
+        item.layoutManager = LinearLayoutManager(this)
+        item.adapter = BarcodeAdapter(list, this, this)
     }
 
-    //////////// NAV DRAWER METHODS ///////////////////
+    /*********************** NAV DRAWER METHODS ***************************/
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -63,7 +51,6 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
@@ -75,8 +62,7 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
+    override fun onNavigationItemSelected(item: MenuItem): Boolean  {
         when (item.itemId) {
             R.id.nav_cupboard -> {
                 val menuIntent = Intent(this@BarcodeHistoryActivity, MainActivity::class.java)
@@ -107,16 +93,14 @@ class BarcodeHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationI
         return true
     }
 
-    //////////// VIEW BARCODE HISTORY METHODS ////////////////////////
-    fun addBarcodeItems()
+    /********************** VIEW BARCODE HISTORY METHODS ********************/
+    private fun addBarcodeItems()
     {
         val context = this
         val db = DataBaseHandler(context)
-
         val data = db.readBarcodeData()
 
-        for(i in 0..(data.size-1)){
-            list.add(data[i].id.toString() + " " + data[i].barcode.toString() + "\n")
-        }
+        for(i in 0..(data.size-1))
+            list.add(data[i].id.toString())
     }
 }

@@ -10,15 +10,9 @@
         tools:context=".BarcodeHistoryActivity"
         android:orientation="vertical">
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/item"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <TextView
-                android:id="@+id/view_barcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="BARCODES"/>
-    </ScrollView>
+            android:layout_height="match_parent" />
 
 </LinearLayout>

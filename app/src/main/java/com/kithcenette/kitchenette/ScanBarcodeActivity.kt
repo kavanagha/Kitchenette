@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
@@ -11,10 +12,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.view.*
+import android.widget.ImageButton
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.vision.CameraSource
@@ -23,6 +23,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_scan_barcode.*
 import kotlinx.android.synthetic.main.app_bar_scan_barcode.*
+import kotlinx.android.synthetic.main.content_scan_barcode.*
 
 class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,38 +51,38 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         nav_view.setNavigationItemSelectedListener(this)
 
         val context = this
-        var db = DataBaseHandler(context)
-        ///////////////////////////////////////////////
-        var barcodeNumber  = 0
+        val db = DataBaseHandler(context)
+        /***********************************************************************************/
 
         svBarcode = findViewById(R.id.sv_barcode)
         tvBarcode = findViewById(R.id.tv_barcode)
+        food_found.visibility = View.GONE
+        food_found.isClickable = false
 
         detector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build()
         detector.setProcessor(object: Detector.Processor<Barcode>{
             override fun release() { }
+            @SuppressLint("MissingPermission")
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
                 val barcode =detections?.detectedItems
                 if(barcode!!.size()>0){
                     tvBarcode.post{
-                        tvBarcode.text= barcode.valueAt(0).displayValue
+                        val barcodeNumber = barcode.valueAt(0).displayValue
+                        cameraSource.stop()
+                        val check = db.checkBarcode(barcodeNumber)
+                        if (!check)
+                            saveThisPopup(barcodeNumber)
+                        else
+                            foundFood(barcodeNumber)
+                       cameraSource.start(svBarcode.holder)
                     }
-                    ////////////////////
-                    barcodeNumber = barcode.valueAt(0).format
                 }
             }
         })
-        //////////////////////////////////////
-        if (barcodeNumber > 0 )
-        {
-            var barcode = Barcodes(barcodeNumber)
-            db.insertBarcode(barcode)
-        }
-        /*var barcodeNum = tvBarcode.text.toString().toInt()
-        if(!db.checkBarcode(barcodeNum)){
-            db.insertBarcode(dbBarcode)
-        }*/
+        run()
+    }
 
+    fun run(){
         cameraSource = CameraSource.Builder(this, detector).setRequestedPreviewSize(1024,768)
             .setRequestedFps(25f).setAutoFocusEnabled(true).build()
 
@@ -94,7 +95,7 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
             override fun surfaceCreated(holder: SurfaceHolder?) {
                 if(ContextCompat.checkSelfPermission(this@ScanBarcodeActivity, Manifest.permission
-                            .CAMERA) == PackageManager.PERMISSION_GRANTED)
+                        .CAMERA) == PackageManager.PERMISSION_GRANTED)
                     cameraSource.start(holder)
                 else ActivityCompat.requestPermissions(this@ScanBarcodeActivity,
                     arrayOf(Manifest.permission.CAMERA), 123)
@@ -103,7 +104,7 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
 
-    ///////////////////////////// NAV MENU METHODS ////////////////////////////////////
+    /***************************** NAV MENU METHODS **************************************/
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -152,12 +153,11 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
             }
         }
-
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    /////////////////////////// SCAN BARCODE METHODS /////////////////////////////////
+    /**************************** SCAN BARCODE METHODS ***********************************/
 
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -178,8 +178,78 @@ class ScanBarcodeActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         cameraSource.release()
     }
 
+    /**************************** POPUP METHODS ***********************************/
+
+    private fun saveThisPopup(barcodeNumber : String){
+        val context = this
+        val db = DataBaseHandler(context)
+        val window = PopupWindow(context)
+        val view = layoutInflater.inflate(R.layout.popup_new_barcode,null)
+
+        window.isFocusable = true
+        window.isOutsideTouchable = true
+        window.update()
+
+        window.contentView = view
+
+        val tvBarcode = view.findViewById<TextView>(R.id.tv_barcode)
+        tvBarcode.text = barcodeNumber
+        val barcode = Barcodes(barcodeNumber)
+
+        val save = view.findViewById<ImageButton>(R.id.save)
+        save.setOnClickListener{
+            db.insertBarcode(barcode)
+            window.dismiss()
+            //recreate()
+        }
+
+        val close  = view.findViewById<ImageButton>(R.id.no_save)
+        close.setOnClickListener {
+            window.dismiss()
+            //recreate()
+        }
+        db.close()
+        window.showAtLocation(root_layout, Gravity.CENTER,0,0)
+    }
+
+    private fun foundFood(barcodeNumber: String){
+        val context = this
+        val db = DataBaseHandler(context)
+
+        food_found.visibility = View.VISIBLE
+        food_found.isClickable = true
+        db.updateLastScan(barcodeNumber)
+        val id = db.findBarcodeName(barcodeNumber)
+        val barcodes = db.findBarcode(id!!)
+
+        if(barcodes?.foodID != null){
+            brand.text = barcodes.brand
+            tvQuantity.text = barcodes.quantity.toString()
+            tvMeasurement.text = barcodes.measurement
+            val food = db.findFood(barcodes.foodID!!)
+            tv_food.text = food?.name
+            if(food?.photo != null){
+                val bitmap: Bitmap? = food.photo
+                image_food_icon.setImageBitmap(bitmap)
+            }
+            add.setOnClickListener {
+                db.addFoodQuantity(barcodes.foodID!!,barcodes.quantity,barcodes.measurement )
+                db.addFoodCupboard(barcodes.foodID!!)
+                db.removeFoodBought(barcodes.foodID!!)
+                db.removeFoodShopping(barcodes.foodID!!)
+                //recreate()
+            }
+        }
+        else{
+            add.visibility = View.GONE
+            add.isClickable = false
+            tv_food.text = barcodeNumber
+            brand.text=""
+            tvQuantity.text = ""
+            tvMeasurement.text = ""
+        }
 
 
-
+    }
 
 }

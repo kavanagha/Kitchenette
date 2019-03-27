@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import java.util.ArrayList
 import android.graphics.Bitmap
+import com.google.android.gms.vision.barcode.Barcode
 import java.io.ByteArrayOutputStream
 import kotlin.math.log2
 
@@ -29,6 +30,7 @@ const val COL_FOOD_PHOTO = "photo"
 const val TABLE_BARCODE = "barcodes"
 const val COL_BARCODE_ID = "id"
 const val COL_BARCODE_BARCODE = "barcode"
+const val COL_BARCODE_SCANNED = "scanned"
 const val COL_BARCODE_TYPE = "type"
 const val COL_BARCODE_FOODID = "foodID"
 const val COL_BARCODE_BRAND = "brand"
@@ -671,6 +673,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
 
         val cv = ContentValues()
         cv.put(COL_BARCODE_BARCODE, barcode.barcode)
+        cv.put(COL_BARCODE_SCANNED, System.currentTimeMillis())
 
         val result = db.insert(TABLE_BARCODE,null,cv)
         if(result == (-1).toLong()) {
@@ -680,9 +683,28 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
         }
     }
-
-    fun checkBarcode(barcode:Int) : Boolean{
-
+    fun findBarcode(id:Int):Barcodes?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_BARCODE WHERE $COL_BARCODE_ID = ?"
+        db.rawQuery(query, arrayOf(id.toString())).use{
+            if (it.moveToFirst()){
+                val barcode = Barcodes()
+                barcode.barcode = it.getString(it.getColumnIndex(COL_BARCODE_BARCODE))
+                barcode.type = it.getString(it.getColumnIndex(COL_BARCODE_TYPE))
+                barcode.brand = it.getString(it.getColumnIndex(COL_BARCODE_BRAND))
+                if(it.getString(it.getColumnIndex(COL_BARCODE_FOODID)) != null)
+                    barcode.foodID = it.getString(it.getColumnIndex(COL_BARCODE_FOODID)).toInt()
+                else
+                    barcode.foodID = null
+                barcode.quantity = it.getString(it.getColumnIndex(COL_BARCODE_QUANTITY)).toDouble()
+                barcode.measurement = it.getString(it.getColumnIndex(COL_BARCODE_MEASUREMENT))
+                return barcode
+            }
+        }
+        db.close()
+        return null
+    }
+    fun checkBarcode(barcode:String) : Boolean{
         val db = this.readableDatabase
 
         val query = "SELECT * FROM " + TABLE_BARCODE + " WHERE " +
@@ -695,18 +717,62 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.close()
         return false
     }
+    fun updateLastScan(barcode : String){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        cv.put(COL_BARCODE_SCANNED,System.currentTimeMillis())
+        val result = db.update(TABLE_BARCODE, cv, "$COL_BARCODE_BARCODE = $barcode", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun updateBarcode(bId : Int, fID : Int, qty : Double, msr : String, brand : String){
+        val db = this.writableDatabase
+        val cv = ContentValues()
 
+        cv.put(COL_BARCODE_FOODID,fID)
+        cv.put(COL_BARCODE_QUANTITY, qty)
+        cv.put(COL_BARCODE_MEASUREMENT, msr)
+        cv.put(COL_BARCODE_BRAND, brand)
+
+        val result = db.update(TABLE_BARCODE, cv, "$COL_BARCODE_ID = $bId", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
+    fun findBarcodeName(barcode : String) : Int?{
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM " + TABLE_BARCODE + " WHERE " +
+                COL_BARCODE_BARCODE + " = ?"
+
+        db.rawQuery(query, arrayOf(barcode)).use{
+            if (it.moveToFirst()){
+                val barcodes = Barcodes()
+                barcodes.id=it.getString(it.getColumnIndex(COL_BARCODE_ID)).toInt()
+                return barcodes.id
+            }
+        }
+        db.close()
+        return null
+    }
     fun readBarcodeData(): MutableList<Barcodes>{
         val list : MutableList<Barcodes> = ArrayList()
 
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_BARCODE"
+        val query = "SELECT * FROM $TABLE_BARCODE ORDER BY $COL_BARCODE_SCANNED DESC"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {
                 val barcode = Barcodes()
                 barcode.id = result.getString(result.getColumnIndex(COL_BARCODE_ID)).toInt()
-                barcode.barcode = result.getString(result.getColumnIndex(COL_BARCODE_BARCODE)).toInt()
+                barcode.barcode = result.getString(result.getColumnIndex(COL_BARCODE_BARCODE))
                 list.add(barcode)
             }while (result.moveToNext())
         }

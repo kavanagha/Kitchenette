@@ -2,14 +2,14 @@ package com.kithcenette.kitchenette
 
 class Barcodes{
     var id:Int =0
-    var barcode:Int = 0
+    var barcode:String = ""
     var type:String = ""
-    var foodID:Int = 0
+    var foodID: Int? = null
     var brand:String = ""
-    var quantity:Int = 0
+    var quantity:Double = 0.0
     var measurement: String = ""
 
-    constructor(barcode:Int){
+    constructor(barcode:String){
         this.barcode= barcode
     }
 
