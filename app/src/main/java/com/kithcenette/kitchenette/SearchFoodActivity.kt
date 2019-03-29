@@ -197,6 +197,10 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         ): View? {
             val rootView = inflater.inflate(R.layout.content_search_food, container, false)
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
+            val foodMessage1 = rootView.findViewById(R.id.all_food_message1) as TextView
+            val foodMessage2 = rootView.findViewById(R.id.all_food_message2) as TextView
+            val foodMessage3 = rootView.findViewById(R.id.all_food_message3) as TextView
+            val foodMessage4 = rootView.findViewById(R.id.all_food_message4) as TextView
             foodItem.layoutManager = LinearLayoutManager(activity)
             foodItem.setHasFixedSize(true)
 
@@ -205,14 +209,14 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 "Desserts & Snacks","Fruit","Meat & Poultry","Nuts & Seeds","Oils","Seafood & Fish",
                 "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
 
-            if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)==1) {
-                addAllFoodItems()
-            }
-            else{
+            if(arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)!=1) {
                 val position = (arguments?.getInt(SearchFoodActivity.PlaceholderFragment.ARG_SECTION_NUMBER)!! -1)
                 val category = categoryArray[position]
-
                 addCategoryFoodItems(category)
+                foodMessage1.visibility = LinearLayout.GONE
+                foodMessage2.visibility = LinearLayout.GONE
+                foodMessage3.visibility = LinearLayout.GONE
+                foodMessage4.visibility = LinearLayout.GONE
             }
 
             foodItem.adapter = FoodAdapter(list, activity!!.applicationContext)
@@ -234,18 +238,8 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             return rootView
         }
 
-        ///////////////////////////ADD FOOD ITEMS TO LIST METHODS///////////////////////////
-        private fun addAllFoodItems() {
-            val context = activity!!.applicationContext
-            val db = DataBaseHandler(context)
+        /************************ ADD FOOD ITEMS TO LIST METHODS *******************************/
 
-            val data = db.readFoodData()
-
-            for(i in 0..(data.size-1)){
-                list.add(data[i].id.toString())
-                //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
-            }
-        }
         private fun addCategoryFoodItems(cat:String) {
             val context = activity!!.applicationContext
             val db = DataBaseHandler(context)
@@ -254,7 +248,6 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             for(i in 0..(data.size-1)){
                 list.add(data[i].id.toString())
-                //FoodList.add(data.get(i).id.toString() + " " + data.get(i).name + "\n")
             }
         }
 

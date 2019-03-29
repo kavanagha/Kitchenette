@@ -33,8 +33,10 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
 
         val food : Food? = db.findFood(items[position].toInt())
 
-        val bitmap: Bitmap? = food?.photo
-        holder.image.setImageBitmap(bitmap)
+        if(food?.photo!= null){
+            val bitmap: Bitmap? = food?.photo
+            holder.image.setImageBitmap(bitmap)
+        }
 
         holder.tvFoodItem.text = food?.name
         holder.buttonCheck.setOnClickListener{

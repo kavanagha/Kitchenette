@@ -44,8 +44,10 @@ class AutoCompleteFoodAdapter(private val context: Activity, private var foodIte
         val tvFood = view!!.findViewById<View>(R.id.tv_food) as TextView
         val image = view.findViewById<View>(R.id.image_food_icon) as ImageView
         tvFood.text = food?.name
-        val bitmap: Bitmap? = food?.photo
-        image.setImageBitmap(bitmap)
+        if(food?.photo!=null){
+            val bitmap: Bitmap? = food.photo
+            image.setImageBitmap(bitmap)
+        }
 
         return view
     }

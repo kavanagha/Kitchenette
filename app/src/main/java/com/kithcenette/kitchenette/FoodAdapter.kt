@@ -30,8 +30,10 @@ class FoodAdapter(private val items : ArrayList<String>, val context: Context) :
         val food : Food? = db.findFood(items[position].toInt())
 
         holder.tvFoodItem.text = food?.name
-        val bitmap: Bitmap? = food?.photo
-        holder.image.setImageBitmap(bitmap)
+        if(food?.photo!= null){
+            val bitmap: Bitmap? = food?.photo
+            holder.image.setImageBitmap(bitmap)
+        }
     }
 }
 

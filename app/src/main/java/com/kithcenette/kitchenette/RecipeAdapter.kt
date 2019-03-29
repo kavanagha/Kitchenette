@@ -30,8 +30,11 @@ class RecipeAdapter(private val items : ArrayList<String>, val context: Context)
         val recipe : Recipe? = db.findRecipe(items[position].toInt())
 
         holder.tvRecipeItem.text = recipe?.name
-        val bitmap: Bitmap? = recipe?.photo
-        holder.image.setImageBitmap(bitmap)
+
+        if(recipe?.photo!= null){
+            val bitmap: Bitmap? = recipe?.photo
+            holder.image.setImageBitmap(bitmap)
+        }
     }
 }
 

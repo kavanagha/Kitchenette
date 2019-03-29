@@ -136,22 +136,18 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         ): View? {
             val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
             val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
-
             val context = activity!!.applicationContext
-            val db = DataBaseHandler(context)
-            val data : MutableList<Food>
 
             if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
-                //addShoppingItems()
-                data = db.readShopping()
-
-                for(i in 0..(data.size-1))
-                    list.add(data[i].id.toString())
+                addShoppingItems()
 
                 foodItem.layoutManager = LinearLayoutManager(activity)
                 foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
             }
             else{
+
+                val db = DataBaseHandler(context)
+                val data : MutableList<Food>
                 //addBoughtItems()
                 data = db.readBought()
 
@@ -163,6 +159,16 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             return rootView
+        }
+
+        private fun addShoppingItems(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data : MutableList<Food>
+            data = db.readShopping()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
         }
 
         companion object {

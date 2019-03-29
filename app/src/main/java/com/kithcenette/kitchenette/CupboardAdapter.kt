@@ -47,8 +47,10 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         holder.tvFoodItem.text = food?.name
         holder.tvQuantityItem.text = food?.quantity.toString()
         holder.tvMeasurement.text = food?.measurement
-        val bitmap: Bitmap? = food?.photo
-        holder.image.setImageBitmap(bitmap)
+        if(food?.photo!= null){
+            val bitmap: Bitmap? = food?.photo
+            holder.image.setImageBitmap(bitmap)
+        }
 
         holder.btnAddFood.setOnClickListener{
             val window = PopupWindow(context)

@@ -10,4 +10,5 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="primaryLightBackground">#ffffff</color>
+    <color name="popupColor">#BEE1FFB1</color>
 </resources>

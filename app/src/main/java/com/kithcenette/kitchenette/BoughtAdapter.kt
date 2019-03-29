@@ -44,8 +44,10 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
         val id = items[position].toInt()
         val layoutInflater = LayoutInflater.from(context)
 
-        val bitmap: Bitmap? = food?.photo
-        holder.image.setImageBitmap(bitmap)
+        if(food?.photo!= null){
+            val bitmap: Bitmap? = food?.photo
+            holder.image.setImageBitmap(bitmap)
+        }
 
         holder.tvFoodItem.text = food?.name
         holder.buttonAddShop.setOnClickListener{

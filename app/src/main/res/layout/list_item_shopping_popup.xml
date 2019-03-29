@@ -13,7 +13,7 @@
                 android:layout_weight="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/secondaryTextColor"
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:text="Item"/>
@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:layout_weight="1"
+                android:textColor="@color/secondaryColor"
                 android:text="Quantity"/>
         <TextView
                 android:id="@+id/tv_measure"
@@ -30,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:textColor="@color/secondaryColor"
                 android:text="Measurement"/>
         <ImageButton
                 android:id="@+id/add_shop"
@@ -39,6 +41,7 @@
                 android:layout_gravity="right"
                 android:padding="10dp"
                 android:background="@null"
+                android:tint="@color/secondaryTextColor"
                 android:src="@drawable/ic_menu_shopping"/>
     </LinearLayout>
 </LinearLayout>

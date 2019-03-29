@@ -8,16 +8,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_food_icon"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:layout_margin="10dp"
                 android:layout_weight="0.01"
                 android:src="@mipmap/ic_launcher_round" />
 
         <TextView
                 android:id="@+id/tv_foodShop"
+                android:textColor="@color/primaryTextColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -32,6 +33,7 @@
                 android:layout_weight="1.2">
             <ImageButton
                     android:id="@+id/shopCheck"
+                    android:tint="@color/secondaryDarkColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
@@ -41,6 +43,7 @@
                     android:background="@null"/>
             <ImageButton
                     android:id="@+id/removeList"
+                    android:tint="@color/secondaryDarkColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"

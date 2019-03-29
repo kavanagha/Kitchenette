@@ -28,6 +28,7 @@
                     android:id="@+id/viewCupboardButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tint="@color/secondaryDarkColor"
                     android:src="@drawable/ic_food"
                     android:background="@null"
                     android:padding="10dp"
@@ -36,6 +37,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/primaryTextColor"
                     android:layout_weight="1"
                     android:text="My Cupboard"
                     android:padding="10dp"
@@ -62,6 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/loadSearchPage"
+                        android:tint="@color/secondaryDarkColor"
                         android:layout_weight="2"
                         android:layout_margin="10dp"
                         android:padding="10dp"
@@ -71,12 +74,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:labelFor="@+id/loadSearchPage"
+                        android:textColor="@color/primaryTextColor"
                         android:textAlignment="center"
                         android:text="Search All Food"
                         android:layout_margin="10dp"
                         android:padding="10dp"
                         android:layout_weight="1"/>
-
             </LinearLayout>
             <LinearLayout
                     android:layout_width="match_parent"
@@ -89,6 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/loadAddPage"
+                        android:tint="@color/secondaryDarkColor"
                         android:layout_weight="2"
                         android:layout_margin="10dp"
                         android:padding="10dp"
@@ -98,6 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:labelFor="@+id/loadAddPage"
+                        android:textColor="@color/primaryTextColor"
                         android:textAlignment="center"
                         android:text="Add Custom Food"
                         android:layout_margin="10dp"

@@ -8,7 +8,7 @@
         android:orientation="vertical"
         android:layout_margin="10dp"
         android:padding="10dp"
-        android:background="@color/secondaryLightColor">
+        android:background="@color/primaryColor">
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/secondaryTextColor"
                 android:text="Barcode: "/>
         <TextView
                 android:id="@+id/tv_barcode"
@@ -31,7 +31,7 @@
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/secondaryTextColor"
                 android:text="xxxxxxxxxxxxx "/>
     </LinearLayout>
     <LinearLayout
@@ -41,14 +41,22 @@
             android:layout_marginLeft="10dp"
             android:orientation="horizontal"
             android:layout_gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:tint="@color/secondaryTextColor"
+                android:src="@android:drawable/ic_menu_search"
+                android:background="@null"/>
         <AutoCompleteTextView
                 android:id="@+id/autocompletetextview"
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/primary_text_light"
+                android:textColor="@color/secondaryTextColor"
                 android:hint="Search Food"
-                android:background="@android:color/background_light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -66,7 +74,7 @@
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/secondaryColor"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="wrap_content"
@@ -76,26 +84,31 @@
             android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:layout_gravity="center">
+        <TextView
+                android:text="Quantity: "
+                android:textColor="@color/secondaryColor"
+                android:textSize="20sp"
+                android:labelFor="@+id/enter_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         <EditText
                 android:id="@+id/tv_qty"
-                android:layout_width="wrap_content"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:inputType="numberDecimal"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/primaryTextColor"
-                android:background="@android:color/background_light"
-                android:hint="quantity"/>
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/secondaryTextColor"/>
         <Spinner
                 android:id="@+id/tv_measure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textSize="20sp"
-                android:textColor="@color/primaryTextColor"
-                android:background="@android:color/background_light"/>
+                android:textColor="@color/secondaryTextColor"
+                android:backgroundTint="@color/secondaryTextColor"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="wrap_content"
@@ -109,17 +122,14 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/secondaryColor"
                 android:text="Brand: "/>
         <EditText
                 android:id="@+id/brand"
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:hint="Brand Name"
-                android:textColor="@color/primaryTextColor"
-                android:background="@android:color/background_light"
+                android:textColor="@color/secondaryTextColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -136,7 +146,7 @@
                 android:padding="10dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/secondaryTextColor"
                 android:text="Do you want to save?"/>
     </LinearLayout>
     <LinearLayout
@@ -154,14 +164,14 @@
                 android:background="@null"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:tint="@color/primaryDarkColor"
+                android:tint="@color/secondaryTextColor"
                 android:id="@+id/save"/>
         <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_cancel"
-                android:tint="@color/primaryDarkColor"
+                android:tint="@color/secondaryTextColor"
                 android:background="@null"
                 android:padding="10dp"
                 android:id="@+id/no_save"/>

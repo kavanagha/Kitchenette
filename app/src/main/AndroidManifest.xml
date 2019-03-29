@@ -21,17 +21,17 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".AddRecipeActivity"
-                android:label="@string/title_activity_add_recipe"
+                android:label="Add New Recipe"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".RecipeItemActivity"
-                android:label="@string/title_activity_recipe_item"
+                android:label="View Recipe"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".CookbookActivity"
-                android:label="@string/title_activity_cookbook"
+                android:label="My Cookbook"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

@@ -20,9 +20,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="2"
-                android:background="@color/secondaryDarkColor"
+                android:background="@color/primaryColor"
                 android:id="@+id/food_found">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_food_icon"
                     android:layout_width="96dp"
                     android:layout_height="96dp"

@@ -9,13 +9,12 @@
         tools:showIn="@layout/app_bar_add_food"
         tools:context=".AddFoodActivity"
         android:orientation="vertical">
-
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="100">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
                 android:layout_height="150pt"
                 android:id="@+id/image"

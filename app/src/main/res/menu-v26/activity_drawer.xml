@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_cupboard"
+                android:icon="@drawable/ic_menu_cupboard"
+                android:iconTint="@color/secondaryColor"
+                android:title="Cupboard"/>
+        <item
+                android:id="@+id/nav_cookbook"
+                android:icon="@drawable/ic_menu_cookbook"
+                android:iconTint="@color/secondaryColor"
+                android:title="Cookbook"/>
+        <item
+                android:id="@+id/nav_shopping"
+                android:icon="@drawable/ic_menu_shopping"
+                android:iconTint="@color/secondaryColor"
+                android:title="Shopping List"/>
+        <item
+                android:id="@+id/nav_favourite"
+                android:icon="@drawable/ic_menu_favourite"
+                android:iconTint="@color/secondaryColor"
+                android:title="Favourites"/>
+        <item
+                android:id="@+id/nav_barcode"
+                android:icon="@drawable/ic_menu_barcode"
+                android:tint="@color/secondaryColor"
+                android:title="Scan a Barcode"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Share"/>
+        </menu>
+    </item>
+
+</menu>
