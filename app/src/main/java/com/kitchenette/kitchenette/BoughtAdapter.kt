@@ -2,6 +2,7 @@ package com.kitchenette.kitchenette
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
@@ -37,6 +38,14 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
 
     override fun onNothingSelected(arg0: AdapterView<*>) {    }
 
+    private fun onClickMethod(position:Int){
+        val message = items[position]
+        val intent = Intent(context, FoodItemActivity::class.java)
+        intent.putExtra("food", message)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
     @SuppressLint("InflateParams")
     override fun onBindViewHolder(holder: ViewHolderBought, position: Int, payloads: MutableList<Any>) {
         val db = DataBaseHandler(context)
@@ -48,8 +57,11 @@ class BoughtAdapter(private val items : ArrayList<String>, val context: Context)
             val bitmap: Bitmap? = food.photo
             holder.image.setImageBitmap(bitmap)
         }
-
+        holder.image.setOnClickListener {
+            onClickMethod(position)}
         holder.tvFoodItem.text = food?.name
+        holder.tvFoodItem.setOnClickListener {
+            onClickMethod(position)}
         holder.buttonAddShop.setOnClickListener{
             db.addFoodShopping(items[position].toInt())
             db.removeFoodBought(items[position].toInt())

@@ -1,6 +1,7 @@
 package com.kitchenette.kitchenette
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,17 +29,29 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
             parent, false))
     }
 
+    private fun onClickMethod(position:Int){
+        val message = items[position]
+        val intent = Intent(context, FoodItemActivity::class.java)
+        intent.putExtra("food", message)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
     override fun onBindViewHolder(holder: ViewHolderShop, position: Int, payloads: MutableList<Any>) {
         val db = DataBaseHandler(context)
 
         val food : Food? = db.findFood(items[position].toInt())
 
         if(food?.photo!= null){
-            val bitmap: Bitmap? = food?.photo
+            val bitmap: Bitmap? = food.photo
             holder.image.setImageBitmap(bitmap)
         }
+        holder.image.setOnClickListener {
+            onClickMethod(position) }
 
         holder.tvFoodItem.text = food?.name
+        holder.tvFoodItem.setOnClickListener {
+            onClickMethod(position) }
         holder.buttonCheck.setOnClickListener{
             db.removeFoodShopping(items[position].toInt())
             db.addFoodBought(items[position].toInt())
@@ -53,7 +66,7 @@ class ShoppingAdapter(private val items : ArrayList<String>, val context: Contex
     }
 }
 
-class ViewHolderShop (private val view: View) : RecyclerView.ViewHolder(view) {
+class ViewHolderShop (view: View) : RecyclerView.ViewHolder(view) {
     val tvFoodItem = view.tv_foodShop!!
     val buttonCheck: ImageButton = view.shopCheck!!
     val buttonRemoveList: ImageButton = view.removeList

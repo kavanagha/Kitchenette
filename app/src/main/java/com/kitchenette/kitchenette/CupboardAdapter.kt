@@ -2,7 +2,9 @@ package com.kitchenette.kitchenette
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -36,6 +38,12 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
             R.layout.list_item_cupboard,
             parent, false))
     }
+    private fun onClickMethod(position:Int){
+        val message = items[position]
+        val intent = Intent(context, FoodItemActivity::class.java)
+        intent.putExtra("food", message)
+        context.startActivity(intent)
+    }
 
     @SuppressLint("InflateParams")
     override fun onBindViewHolder(holder: ViewHolderCupboard, position: Int, payloads: MutableList<Any>) {
@@ -45,10 +53,18 @@ class CupboardAdapter(private val items : ArrayList<String>, val context: Contex
         val layoutInflater = LayoutInflater.from(context)
 
         holder.tvFoodItem.text = food?.name
+        holder.tvFoodItem.setOnClickListener{
+            onClickMethod(position)}
         holder.tvQuantityItem.text = food?.quantity.toString()
+        holder.tvQuantityItem.setOnClickListener {
+            onClickMethod(position)}
         holder.tvMeasurement.text = food?.measurement
+        holder.tvMeasurement.setOnClickListener {
+            onClickMethod(position)}
+        holder.image.setOnClickListener {
+            onClickMethod(position)}
         if(food?.photo!= null){
-            val bitmap: Bitmap? = food?.photo
+            val bitmap: Bitmap? = food.photo
             holder.image.setImageBitmap(bitmap)
         }
 

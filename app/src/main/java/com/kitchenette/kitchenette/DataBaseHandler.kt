@@ -333,6 +333,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             do {
                 val food = Food()
                 food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                food.name = result.getString(result.getColumnIndex(COL_FOOD_NAME))
                 list.add(food)
             }while (result.moveToNext())
         }

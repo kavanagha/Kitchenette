@@ -48,6 +48,11 @@ class CupboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         autocompletetextview?.setOnFocusChangeListener {
                 _, _ ->
             autocompletetextview.setOnItemClickListener { _, _, _, _ ->
+                val db = DataBaseHandler(this)
+                val message = db.findFoodName(autocompletetextview.text.toString()).toString()
+                val intent = Intent(this@CupboardActivity, FoodItemActivity::class.java)
+                intent.putExtra("food", message)
+                this.startActivity(intent)
             }
         }
 
