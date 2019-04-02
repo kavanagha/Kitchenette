@@ -32,7 +32,6 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         /**************************** TAB ACTIVITY ***********************************/
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Setup spinner
         spinner.adapter = MyAdapter(
             toolbar.context,
             arrayOf("All","Baking & Grains","Beans & Legumes","Beverages",
@@ -158,14 +157,14 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     /**************************** ADAPTER CLASS ***********************************/
     private class MyAdapter(context: Context, objects: Array<String>) :
         ArrayAdapter<String>(context, R.layout.list_item, objects), ThemedSpinnerAdapter {
-        private val mDropDownHelper: ThemedSpinnerAdapter.Helper = ThemedSpinnerAdapter.Helper(context)
+        private val dropDownHelper: ThemedSpinnerAdapter.Helper = ThemedSpinnerAdapter.Helper(context)
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view: View
 
             view = if (convertView == null) {
                 // Inflate the drop down using the helper's LayoutInflater
-                val inflater = mDropDownHelper.dropDownViewInflater
+                val inflater = dropDownHelper.dropDownViewInflater
                 inflater.inflate(R.layout.list_item, parent, false)
             } else {
                 convertView
@@ -177,11 +176,11 @@ class SearchFoodActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         override fun getDropDownViewTheme(): Resources.Theme? {
-            return mDropDownHelper.dropDownViewTheme
+            return dropDownHelper.dropDownViewTheme
         }
 
         override fun setDropDownViewTheme(theme: Resources.Theme?) {
-            mDropDownHelper.dropDownViewTheme = theme
+            dropDownHelper.dropDownViewTheme = theme
         }
     }
 

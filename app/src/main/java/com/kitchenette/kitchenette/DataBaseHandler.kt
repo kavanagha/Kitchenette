@@ -185,6 +185,24 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.close()
         return list
     }
+    fun readShoppingCategory(category:String):MutableList<Food>{
+        val list : MutableList<Food> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_SHOPPING =\"1\" " +
+                "AND $COL_FOOD_CATEGORY = \"$category\"" +
+                "ORDER BY $COL_FOOD_CATEGORY, $COL_FOOD_NAME"
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
 
     fun addFoodBought(id:Int){
         val db = this.writableDatabase
@@ -218,6 +236,24 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val list : MutableList<Food> = ArrayList()
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_BOUGHT =\"1\" ORDER BY $COL_FOOD_NAME"
+        val result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do {
+                val food = Food()
+                food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
+                list.add(food)
+            }while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    fun readBoughtCategory(category: String):MutableList<Food>{
+        val list : MutableList<Food> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_FOOD WHERE $COL_FOOD_BOUGHT =\"1\" " +
+                "AND $COL_FOOD_CATEGORY = \"$category\"" +
+                "ORDER BY $COL_FOOD_CATEGORY, $COL_FOOD_NAME"
         val result = db.rawQuery(query, null)
         if(result.moveToFirst()){
             do {

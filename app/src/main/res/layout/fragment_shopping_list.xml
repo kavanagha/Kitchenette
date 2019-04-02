@@ -6,10 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/app_bar_shopping_list"
         android:id="@+id/constraintLayout"
-        android:orientation="vertical"
-        tools:context=".ShoppingListActivity$PlaceholderFragment">
+        android:orientation="vertical">
+    <Spinner
+            android:id="@+id/spinner_shop"
+            android:backgroundTint="@color/primaryColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/foodItem"

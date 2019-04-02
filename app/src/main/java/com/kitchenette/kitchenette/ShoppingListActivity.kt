@@ -13,31 +13,33 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import kotlinx.android.synthetic.main.activity_shopping.*
 import kotlinx.android.synthetic.main.app_bar_shopping_list.*
+import android.R.attr.country
+import android.widget.Toast
+import kotlinx.android.synthetic.main.content_barcode_history.*
+
 
 class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private var mSectionsPagerAdapter: ShoppingListActivity.SectionsPagerAdapter? = null
+    private var sectionsPagerAdapter: ShoppingListActivity.SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping)
         setSupportActionBar(toolbar)
 
-        ///////////////////////////////////TAB ACTIVITY //////////////////////////////
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-        // Set up the ViewPager with the sections adapter.
-        container.adapter = mSectionsPagerAdapter
+        /**************************** TAB ACTIVITY ***********************************/
+        sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        container.adapter = sectionsPagerAdapter
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
-
-        //////////////////////////////// NAVIGATION DRAWER /////////////////////////
+        /**************************** NAVIGATION DRAWER ***********************************/
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -46,11 +48,9 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-
-
     }
 
-    //////////////// NAVIGATION DRAWER METHODS ////////////////////////
+    /**************************** NAVIGATION DRAWER METHODS ***********************************/
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -61,7 +61,6 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
     }
@@ -74,7 +73,6 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
                 val menuIntent = Intent(this@ShoppingListActivity, MainActivity::class.java)
@@ -106,67 +104,140 @@ class ShoppingListActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
 
-
-    ///////////////////// TAB ACTIVITY METHODS ////////////////////////
-    /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+    /**************************** TAB SECTIONS CLASS ***********************************/
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-
             return PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int { return 2 }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+    /**************************** FRAGMENT CLASS ***********************************/
     class PlaceholderFragment : Fragment() {
 
-        private val list : ArrayList<String> = ArrayList()
+        private var list : ArrayList<String> = ArrayList()
+        private var categoryList : Array<String>  = arrayOf("All","Baking & Grains",
+            "Beans & Legumes","Beverages", "Broths & Soups","Condiments & Sauces",
+            "Dairy","Dairy Alternatives", "Desserts & Snacks","Fruit","Meat & Poultry",
+            "Nuts & Seeds","Oils","Seafood & Fish", "Spices, Herbs & Seasonings","Sweeteners","Vegetables")
+        private var selected: String? = ""
 
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
-            val rootView = inflater.inflate(R.layout.content_shopping_list, container, false)
-            val foodItem = rootView.findViewById(R.id.foodItem) as RecyclerView
-            val context = activity!!.applicationContext
-
-            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
-                addShoppingItems()
-
-                foodItem.layoutManager = LinearLayoutManager(activity)
-                foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
+            return if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                inflater.inflate(R.layout.fragment_shopping_list, container, false)
+            } else{
+                inflater.inflate(R.layout.fragment_bought_list, container, false)
             }
-            else{
-
-                val db = DataBaseHandler(context)
-                val data : MutableList<Food>
-                //addBoughtItems()
-                data = db.readBought()
-
-                for(i in 0..(data.size-1))
-                    list.add(data[i].id.toString())
-
-                foodItem.layoutManager = LinearLayoutManager(activity)
-                foodItem.adapter = BoughtAdapter(list, activity!!.applicationContext)
-            }
-
-            return rootView
         }
 
-        private fun addShoppingItems(){
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                list.clear()
+                val foodItem = view.findViewById(R.id.foodItem) as RecyclerView
+                val spinner = view.findViewById(R.id.spinner_shop) as Spinner
+
+                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        selected = categoryList[position]
+                        if (selected != null) {
+                            if(selected.equals("All")){
+                                addShoppingItems()
+                            }
+                            else{
+                                addShoppingCategoryItems()
+                            }
+                            foodItem.layoutManager = LinearLayoutManager(activity)
+                            foodItem.adapter = ShoppingAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val aa = ArrayAdapter(activity!!.applicationContext, android.R.layout.simple_spinner_item, categoryList)
+                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = aa
+            }
+            else{
+                list.clear()
+                val foodItem = view.findViewById(R.id.foodItem) as RecyclerView
+                val spinner = view.findViewById(R.id.spinner_bought) as Spinner
+
+                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        selected = categoryList[position]
+                        if (selected != null) {
+                            if(selected.equals("All")){
+                                addBoughtItems()
+                            }
+                            else{
+                                addBoughtCategoryItems()
+                            }
+                            foodItem.layoutManager = LinearLayoutManager(activity)
+                            foodItem.adapter = BoughtAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val aa = ArrayAdapter(activity!!.applicationContext, android.R.layout.simple_spinner_item, categoryList)
+                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = aa
+            }
+        }
+
+        private fun addBoughtCategoryItems(){
             val context = activity!!.applicationContext
             val db = DataBaseHandler(context)
             val data : MutableList<Food>
-            data = db.readShopping()
+            data = db.readBoughtCategory(selected!!)
+            list.clear()
 
             for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
+        }
+
+        private fun addBoughtItems(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data : MutableList<Food>
+            data = db.readBought()
+            list.clear()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
+        }
+
+        private fun addShoppingCategoryItems() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data: MutableList<Food>
+            data = db.readShoppingCategory(selected!!)
+            list.clear()
+
+            for (i in 0..(data.size - 1))
+                list.add(data[i].id.toString())
+        }
+
+        private fun addShoppingItems() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data: MutableList<Food>
+            data = db.readShopping()
+            list.clear()
+
+            for (i in 0..(data.size - 1))
                 list.add(data[i].id.toString())
         }
 
