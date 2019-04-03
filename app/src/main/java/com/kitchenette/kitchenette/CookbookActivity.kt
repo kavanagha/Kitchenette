@@ -13,10 +13,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Spinner
 import com.kitchenette.search.AutoCompleteFoodAdapter
 import kotlinx.android.synthetic.main.activity_cookbook.*
 import kotlinx.android.synthetic.main.app_bar_cookbook.*
+
 
 class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -149,29 +153,189 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     class PlaceholderFragment : Fragment() {
 
         private val list : ArrayList<String> = ArrayList()
+        private var mealList : Array<String> = arrayOf("All","Breakfast", "Lunch",
+            "Dinner","Desserts & Snacks", "Other")
+        private var cuisineList : ArrayList<String> = ArrayList()
+        private var dietList : ArrayList<String> = ArrayList()
+        private var selectMeal : String? = null
+        private var selectCuisine : String? = null
+        private var selectDiet : String? = null
 
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
-            val rootView = inflater.inflate(R.layout.content_cookbook, container, false)
-            val recipeItem = rootView.findViewById(R.id.recipeItem) as RecyclerView
-            val context = activity!!.applicationContext
-            val db = DataBaseHandler(context)
-            val data : MutableList<Recipe>
 
-            data = if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
-                db.suggestRecipes()
+            return if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                inflater.inflate(R.layout.fragment_cookbook_suggested, container, false)
             } else{
-                db.readRecipeData()
+                inflater.inflate(R.layout.fragment_cookbook_all, container, false)
+            }
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            val recipeItem = view.findViewById(R.id.recipeItem) as RecyclerView
+            fillCuisineList()
+            fillDietList()
+
+            if(arguments?.getInt(ARG_SECTION_NUMBER)==1) {
+                val spinnerMeal = view.findViewById(R.id.spinner_meal_type) as Spinner
+                val spinnerCuisine = view.findViewById(R.id.spinner_cuisine) as Spinner
+                val spinnerDiet = view.findViewById(R.id.spinner_diet) as Spinner
+                addSuggestItems()
+
+
+                /** MEAL TYPE FILTER **/
+                spinnerMeal.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addSuggestItems()
+                        selectMeal = mealList[position]
+                        if (selectMeal != null) {
+                            if(selectMeal!="All")
+                                removeAllList()
+                            recipeItem.layoutManager = LinearLayoutManager(activity)
+                            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val am = ArrayAdapter(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, mealList)
+                am.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerMeal.adapter = am
+
+                /** CUISINE FILTER **/
+
+                spinnerCuisine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addSuggestItems()
+                        selectCuisine = cuisineList[position]
+                        if (selectCuisine != null) {
+                            if(selectCuisine!="All")
+                                removeAllList()
+                            recipeItem.layoutManager = LinearLayoutManager(activity)
+                            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val adapter = ArrayAdapter<String>(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, cuisineList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerCuisine.adapter = adapter
+
+                /** DIET FILTER **/
+
+                spinnerDiet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addSuggestItems()
+                        selectDiet = dietList[position]
+                        if (selectDiet != null) {
+                            if(selectDiet!="All")
+                                removeAllList()
+                            recipeItem.layoutManager = LinearLayoutManager(activity)
+                            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val adapterDiet = ArrayAdapter<String>(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, dietList)
+                adapterDiet.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerDiet.adapter = adapterDiet
+
+            } else{
+                val spinnerMeal = view.findViewById(R.id.spinner_meal_type) as Spinner
+                val spinnerCuisine = view.findViewById(R.id.spinner_cuisine) as Spinner
+                val spinnerDiet = view.findViewById(R.id.spinner_diet) as Spinner
+                addAllItems()
+
+                /** MEAL TYPE FILTER **/
+                spinnerMeal.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addAllItems()
+                        selectMeal = mealList[position]
+                        if (selectMeal != null) {
+                            if(selectMeal!="All")
+                                removeAllList()
+                            recipeItem.layoutManager = LinearLayoutManager(activity)
+                            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val am = ArrayAdapter(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, mealList)
+                am.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerMeal.adapter = am
+
+                /** CUISINE FILTER **/
+
+                spinnerCuisine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addAllItems()
+                        selectCuisine = cuisineList[position]
+                        if (selectCuisine != null) {
+                            if(selectCuisine!="All")
+                                removeAllList()
+                            recipeItem.layoutManager = LinearLayoutManager(activity)
+                            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val adapter = ArrayAdapter<String>(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, cuisineList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerCuisine.adapter = adapter
+
+                /** DIET FILTER **/
+
+                spinnerDiet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        adapterView: AdapterView<*>, arg1: View, position: Int, id: Long
+                    ) {
+                        addAllItems()
+                        selectDiet = dietList[position]
+                        if (selectDiet != null) {
+                            if(selectDiet!="All")
+                                removeAllList()
+                           recipeItem.layoutManager = LinearLayoutManager(activity)
+                           recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>) { }
+                }
+
+                val adapterDiet = ArrayAdapter<String>(activity!!.applicationContext,
+                    android.R.layout.simple_spinner_item, dietList)
+                adapterDiet.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerDiet.adapter = adapterDiet
+
             }
 
-            for(i in 0..(data.size-1))
-                list.add(data[i].id.toString())
-
-            recipeItem.layoutManager = LinearLayoutManager(activity)
-            recipeItem.adapter = RecipeAdapter(list, activity!!.applicationContext)
-
+            /** ADD ON CLICK LISTENER TO RECYCLER VIEW ITEM **/
             var message:String?
             recipeItem.addOnItemTouchListener(
                 RecyclerItemClickListener(
@@ -185,8 +349,122 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         }
                     })
             )
+        }
 
-            return rootView
+        private fun addSuggestItems() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data: MutableList<Recipe>
+            list.clear()
+            data = db.suggestRecipes()
+
+            for (i in 0..(data.size - 1))
+                list.add(data[i].id.toString())
+        }
+        private fun addAllItems(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            val data : MutableList<Recipe>
+            list.clear()
+            data = db.readRecipeData()
+
+            for(i in 0..(data.size-1))
+                list.add(data[i].id.toString())
+        }
+        private fun removeAllList(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+
+            val temp : ArrayList<String> = ArrayList()
+            for(i in 0..(list.size-1))
+               temp.add(list[i])
+
+            list.clear()
+
+            /** MEAL TYPE FILTER **/
+
+            for(i in 0..(temp.size-1)){
+                val recipe = db.findRecipe(temp[i].toInt())
+                if (selectMeal!= null && selectMeal!= "All"){
+                    if ( recipe?.mealType == selectMeal)
+                        list.add(temp[i])
+                } else
+                    list.add(temp[i])
+            }
+
+            /** CUISINE FILTER **/
+            temp.clear()
+
+            for(i in 0..(list.size-1))
+                temp.add(list[i])
+
+            list.clear()
+
+            for(i in 0..(temp.size-1)){
+                val recipe = db.findRecipe(temp[i].toInt())
+                if (selectCuisine!= null && selectCuisine!= "All"){
+                    if ( recipe?.cuisine == selectCuisine)
+                        list.add(temp[i])
+                } else
+                    list.add(temp[i])
+            }
+
+            /** DIET FILTER **/
+            temp.clear()
+
+            for(i in 0..(list.size-1))
+                temp.add(list[i])
+
+            list.clear()
+
+            for(i in 0..(temp.size-1)){
+                val diet = db.findDietName(temp[i].toInt())
+                if (selectDiet!= null && selectDiet!= "All"){
+                    if ( diet == selectDiet)
+                        list.add(temp[i])
+                } else
+                    list.add(temp[i])
+            }
+
+
+        }
+        private fun fillCuisineList() {
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            addAllItems()
+            cuisineList.add("All")
+
+            for (i in 0..(list.size - 1)) {
+                val recipe = db.findRecipe(list[i].toInt())
+                var found = false
+                for (i in 0..(cuisineList.size - 1)) {
+                    if (cuisineList[i] == recipe?.cuisine) {
+                        found = true
+                        break
+                    }
+                }
+                if (!found)
+                    cuisineList.add(recipe!!.cuisine)
+            }
+        }
+        private fun fillDietList(){
+            val context = activity!!.applicationContext
+            val db = DataBaseHandler(context)
+            addAllItems()
+            dietList.add("All")
+
+            for (i in 0..(list.size - 1)) {
+                var found = false
+                val name = db.findDietName(list[i].toInt())
+                for (i in 0..(dietList.size - 1)) {
+                    if (dietList[i]==name) {
+                        found = true
+                        break
+                    }
+                }
+                if (!found && name!=null)
+                    dietList.add(name)
+            }
         }
 
         companion object {

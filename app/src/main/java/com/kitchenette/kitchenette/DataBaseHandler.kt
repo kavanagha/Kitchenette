@@ -714,6 +714,17 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
 
         db.insert(TABLE_DIET, null, cv)
     }
+    fun findDietName(fId:Int) : String?{
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $TABLE_DIET WHERE $COL_DIET_RECIPE = ?"
+        db.rawQuery(query, arrayOf(fId.toString())).use{
+            if (it.moveToFirst()){
+                return it.getString(it.getColumnIndex(COL_DIET_NAME))
+            }
+        }
+        db.close()
+        return null
+    }
 
     /************************** BARCODE TABLE **************************************/
 
