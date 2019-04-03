@@ -13,12 +13,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.AutoCompleteTextView
+import com.kitchenette.search.AutoCompleteFoodAdapter
 import kotlinx.android.synthetic.main.activity_cookbook.*
 import kotlinx.android.synthetic.main.app_bar_cookbook.*
 
 class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var mSectionsPagerAdapter: CookbookActivity.SectionsPagerAdapter? = null
+    private val list : ArrayList<Recipe> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,23 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        /**************************** SEARCH METHODS ***********************************/
+        addRecipeItems()
+        val autocompletetextview = findViewById<AutoCompleteTextView>(R.id.autocompletetextview)
+        val adapter = AutoCompleteRecipeAdapter(this, list)
+        autocompletetextview?.threshold=1
+        autocompletetextview?.setAdapter(adapter)
+        autocompletetextview?.setOnFocusChangeListener {
+                _, _ ->
+            autocompletetextview.setOnItemClickListener { _, _, _, _ ->
+                val db = DataBaseHandler(this)
+                val message = db.findRecipeName(autocompletetextview.text.toString()).toString()
+                val intent = Intent(this@CookbookActivity, RecipeItemActivity::class.java)
+                intent.putExtra("recipe", message)
+                this.startActivity(intent)
+            }
+        }
 
     }
 
@@ -103,6 +123,17 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    /************************ SEARCH METHODS ***************************/
+    private fun addRecipeItems(){
+        val context = this
+        val db = DataBaseHandler(context)
+
+        val data = db.readRecipeData()
+
+        for(i in 0..(data.size-1))
+            list.add(data[i])
     }
 
     /**************** TAB ACTIVITY METHODS *****************/

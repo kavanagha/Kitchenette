@@ -18,6 +18,30 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="10dp"
+                    android:tint="@color/secondaryTextColor"
+                    android:src="@android:drawable/ic_menu_search"
+                    android:background="@null"/>
+            <AutoCompleteTextView
+                    android:id="@+id/autocompletetextview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:textColor="@android:color/primary_text_light"
+                    android:hint="Search Food"
+                    android:background="@android:color/background_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"

@@ -556,6 +556,20 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.close()
         return null
     }
+    fun findRecipeName(name:String): Int? {
+        val db = this.readableDatabase
+
+        val query = "SELECT * FROM $TABLE_RECIPE WHERE $COL_RECIPE_NAME = ?"
+        db.rawQuery(query, arrayOf(name)).use{
+            if (it.moveToFirst()){
+                val recipe = Recipe()
+                recipe.id=it.getString(it.getColumnIndex(COL_RECIPE_ID)).toInt()
+                return recipe.id
+            }
+        }
+        db.close()
+        return null
+    }
 
     fun addRecipeFavourites(id:Int){
         val db = this.writableDatabase
