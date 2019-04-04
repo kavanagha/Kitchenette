@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "770510248414",
+    "firebase_url": "https://kitchenette-32c7d.firebaseio.com",
+    "project_id": "kitchenette-32c7d",
+    "storage_bucket": "kitchenette-32c7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770510248414:android:a6bf3b0a7225bb1f",
+        "android_client_info": {
+          "package_name": "com.kithcenette.kitchenette_v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADSKsJlJVbIcegdZuVg5ux3tzp-CG3REM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770510248414-kbhcts01up8sgphohegvanitdn3psnec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770510248414:android:c9352b1091af89d2",
+        "android_client_info": {
+          "package_name": "com.kithcenette.kitchenette_v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADSKsJlJVbIcegdZuVg5ux3tzp-CG3REM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770510248414-kbhcts01up8sgphohegvanitdn3psnec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
