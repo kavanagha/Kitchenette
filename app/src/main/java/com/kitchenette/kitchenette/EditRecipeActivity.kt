@@ -20,14 +20,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.kitchenette.search.AutoCompleteFoodAdapter
-import kotlinx.android.synthetic.main.activity_add_recipe.*
-import kotlinx.android.synthetic.main.app_bar_add_recipe.*
-import kotlinx.android.synthetic.main.content_add_recipe.*
-import kotlinx.android.synthetic.main.content_add_recipe.root_layout
+import kotlinx.android.synthetic.main.activity_edit_recipe.*
+import kotlinx.android.synthetic.main.app_bar_edit_recipe.*
+import kotlinx.android.synthetic.main.content_edit_recipe.*
 
-
-class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-    AdapterView.OnItemSelectedListener {
+class EditRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    AdapterView.OnItemSelectedListener{
 
     val list : ArrayList<Food> = ArrayList()
     private val ingredients : ArrayList<String> = ArrayList()
@@ -42,41 +40,35 @@ class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_recipe)
+        setContentView(R.layout.activity_edit_recipe)
         setSupportActionBar(toolbar)
+
+        /******************************* SET RECIPE ITEM *************************************/
+        val context = this
+        val db = DataBaseHandler(context)
+        val id: String = intent.getStringExtra("recipe")
+        val recipe = db.findRecipe(id.toInt())
+
+        name.setText(recipe?.name)
+        description.setText(recipe?.description)
+        method.setText(recipe?.method)
+        servings.setText(recipe?.servings.toString())
+        cuisine.setText(recipe?.cuisine)
+        val bitmap: Bitmap? = recipe?.photo
+        image.setImageBitmap(bitmap)
+        selected = recipe?.mealType
 
         /********************* FLOATING ACTION BUTTON *******************************/
         fab.setOnClickListener {
-            val context = this
-            val db = DataBaseHandler(context)
+            if(name.text.toString().isNotEmpty() && description.text.toString().isNotEmpty() &&
+                method.text.toString().isNotEmpty()&& servings.text.toString().isNotEmpty() &&
+                cuisine.text.toString().isNotEmpty() && bitmap!= null){
 
-            if(name.text.toString().isNotEmpty() &&
-                    description.text.toString().isNotEmpty() &&
-                    method.text.toString().isNotEmpty()&&
-                    servings.text.toString().isNotEmpty() &&
-                    cuisine.text.toString().isNotEmpty() &&
-                    bitmap!= null &&
-                    ingredients.isNotEmpty() &&
-                    quantityList.isNotEmpty() &&
-                    measureList.isNotEmpty()){
+                db.updateRecipe(name.text.toString(), method.text.toString(), cuisine.text.toString(),
+                    description.text.toString(), selected!!, bitmap, servings.text.toString().toInt(), id.toInt())
 
-                val recipe = Recipe(name.text.toString(),selected.toString(), cuisine.text.toString(),
-                    servings.text.toString().toInt(),description.text.toString(),method.text.toString(), bitmap!!)
-                val newRecipeID = db.insertRecipe(recipe)
-
-                if (newRecipeID!=null){
-                    for (i in 0..(ingredients.size-1)) {
-                        val ing = Ingredients(newRecipeID, ingredients[i].toInt(), quantityList[i], measureList[i])
-                        db.insertIngredient(ing)
-                    }
-                    if(diet.text.toString().isNotEmpty()){
-                        val diet = Diet(diet.text.toString(), newRecipeID)
-                        db.insertDiet(diet)
-                    }
-                }
-                val message = newRecipeID.toString()
-                val intent = Intent(this@AddRecipeActivity, RecipeItemActivity::class.java)
-                intent.putExtra("recipe", message)
+                val intent = Intent(this@EditRecipeActivity, RecipeItemActivity::class.java)
+                intent.putExtra("recipe", id)
                 startActivity(intent)
             }else
                 Toast.makeText(context, "Please Fill Out All details", Toast.LENGTH_SHORT).show()
@@ -88,27 +80,19 @@ class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
 
         /*************************** UPLOAD IMAGE ******************************/
         upload_image.setOnClickListener {
-            //check runtime permission
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_DENIED){
-                    //permission denied
                     val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    //show popup to request runtime permission
                     requestPermissions(permissions, AddFoodActivity.PERMISSION_CODE)
-                }
-                else{
-                    pickImageFromGallery() //permission already granted
-                }
-            }
-            else{
-                pickImageFromGallery() //system OS is < Marshmallow
-            }
+                } else
+                    pickImageFromGallery()
+            } else
+                pickImageFromGallery()
         }
 
         /**************************** SPINNER **************************************/
@@ -119,18 +103,14 @@ class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         meal_type!!.adapter = aa
 
         /**************************** SEARCH METHODS ***********************************/
-
         addFoodItems()
-
         val adapter = AutoCompleteFoodAdapter(this, list)
         autocompletetextview?.threshold=1
         autocompletetextview?.setAdapter(adapter)
         autocompletetextview?.setOnFocusChangeListener {
                 _, _ ->
             autocompletetextview.setOnItemClickListener { _, _, _, _ ->
-                val db = DataBaseHandler(this)
                 val message = db.findFoodName(autocompletetextview.text.toString()).toString()
-
                 ingredientPopup(message.toInt())
                 autocompletetextview.text.clear()
                 val item = findViewById<RecyclerView>(R.id.ingredient_list)
@@ -164,23 +144,23 @@ class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_cupboard -> {
-                val menuIntent = Intent(this@AddRecipeActivity, MainActivity::class.java)
+                val menuIntent = Intent(this@EditRecipeActivity, MainActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_cookbook -> {
-                val menuIntent = Intent(this@AddRecipeActivity, CookbookActivity::class.java)
+                val menuIntent = Intent(this@EditRecipeActivity, CookbookActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_shopping -> {
-                val menuIntent = Intent(this@AddRecipeActivity, ShoppingListActivity::class.java)
+                val menuIntent = Intent(this@EditRecipeActivity, ShoppingListActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_favourite -> {
-                val menuIntent = Intent(this@AddRecipeActivity, FavouritesActivity::class.java)
+                val menuIntent = Intent(this@EditRecipeActivity, FavouritesActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_barcode -> {
-                val menuIntent = Intent(this@AddRecipeActivity, ScanBarcodeActivity::class.java)
+                val menuIntent = Intent(this@EditRecipeActivity, ScanBarcodeActivity::class.java)
                 startActivity(menuIntent)
             }
             R.id.nav_share -> {
@@ -292,3 +272,4 @@ class AddRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         window.showAtLocation(root_layout, Gravity.CENTER,0,0)
     }
 }
+

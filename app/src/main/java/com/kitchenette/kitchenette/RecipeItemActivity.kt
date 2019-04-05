@@ -32,13 +32,11 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         addIngredients(id.toInt())
 
         /***************FLOATING ACTION BUTTONS ******************/
-
         // "Make This" Button
         fab.setOnClickListener {
             makeThisPopup(id.toInt())
         }
         /*********************** NAVIGATION ***********************/
-
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -49,7 +47,6 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         /**************  FILL PAGE *******************************/
         var recipe : Recipe? = db.findRecipe(id.toInt())
-
         recipeName.text = recipe?.name
         serving.text = recipe?.servings.toString()
         cuisine.text = recipe?.cuisine
@@ -83,6 +80,12 @@ class RecipeItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 favButton.setColorFilter(Color.argb(0, 0, 0, 0))
                 db.findRecipe(id.toInt())
             }
+        }
+
+        edit_button.setOnClickListener {
+            val intent = Intent(this@RecipeItemActivity, EditRecipeActivity::class.java)
+            intent.putExtra("recipe", id)
+            startActivity(intent)
         }
 
         db.close()

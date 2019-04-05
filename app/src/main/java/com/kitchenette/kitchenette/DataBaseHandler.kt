@@ -538,7 +538,31 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             result
         }
     }
+    fun updateRecipe(name:String, method:String, cuisine:String, description:String,
+                     mealType:String, bitmap: Bitmap, servings: Int, id:Int){
+        val db = this.writableDatabase
+        val bos = ByteArrayOutputStream()
 
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        val bArray = bos.toByteArray()
+        val cv = ContentValues()
+
+        cv.put(COL_RECIPE_NAME, name)
+        cv.put(COL_RECIPE_METHOD,method)
+        cv.put(COL_RECIPE_CUISINE, cuisine)
+        cv.put(COL_RECIPE_DESCRIPTION, description)
+        cv.put(COL_RECIPE_MEAL, mealType)
+        cv.put(COL_RECIPE_PHOTO, bArray)
+        cv.put(COL_RECIPE_SERVINGS, servings)
+
+        val result = db.update(TABLE_RECIPE, cv, "$COL_RECIPE_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
     fun readRecipeData() : MutableList<Recipe>{
         val list : MutableList<Recipe> = ArrayList()
         val db = this.readableDatabase
