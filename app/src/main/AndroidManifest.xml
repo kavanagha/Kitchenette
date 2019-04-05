@@ -20,62 +20,67 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name="com.kitchenette.kitchenette.AddRecipeActivity"
+                android:name=".EditFoodActivity"
+                android:label="@string/title_activity_edit_food"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+                android:name=".AddRecipeActivity"
                 android:label="Add New Recipe"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.RecipeItemActivity"
+                android:name=".RecipeItemActivity"
                 android:label="View Recipe"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.CookbookActivity"
+                android:name=".CookbookActivity"
                 android:label="My Cookbook"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.CupboardActivity"
+                android:name=".CupboardActivity"
                 android:label="My Cupboard"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.FavouritesActivity"
+                android:name=".FavouritesActivity"
                 android:label="@string/title_activity_favourites"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.ShoppingListActivity"
+                android:name=".ShoppingListActivity"
                 android:label="@string/title_activity_shopping_list"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.BarcodeHistoryActivity"
+                android:name=".BarcodeHistoryActivity"
                 android:label="@string/title_activity_barcode_history"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.ScanBarcodeActivity"
+                android:name=".ScanBarcodeActivity"
                 android:label="@string/title_activity_scan_barcode"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.AddFoodActivity"
+                android:name=".AddFoodActivity"
                 android:label="@string/title_activity_add_food"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.FoodItemActivity"
+                android:name=".FoodItemActivity"
                 android:label="@string/title_activity_food_item"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.SearchFoodActivity"
+                android:name=".SearchFoodActivity"
                 android:label="@string/title_activity_search_food"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.kitchenette.kitchenette.MainActivity"
+                android:name=".MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

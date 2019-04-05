@@ -98,7 +98,6 @@ class CookbookActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_cupboard -> {
                 val menuIntent = Intent(this@CookbookActivity, MainActivity::class.java)

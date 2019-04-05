@@ -10,7 +10,6 @@ import java.util.ArrayList
 import android.graphics.Bitmap
 import java.io.ByteArrayOutputStream
 
-
 const val DATABASE_NAME = "kitchenette.db"
 
 const val TABLE_FOOD = "food"
@@ -75,6 +74,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         cv.put(COL_FOOD_NAME, food.name)
         cv.put(COL_FOOD_CATEGORY, food.category)
         cv.put(COL_FOOD_PHOTO, bArray)
+        cv.put(COL_FOOD_MEASUREMENT, "kg")
 
         val result = db.insert(TABLE_FOOD,null,cv)
         return if(result == (-1).toLong()) {
@@ -84,6 +84,26 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
             result
         }
+    }
+    fun editFood(foodName:String, category : String, bitmap: Bitmap, id:Int){
+        val db = this.writableDatabase
+
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        val bArray = bos.toByteArray()
+
+        val cv = ContentValues()
+        cv.put(COL_FOOD_NAME, foodName)
+        cv.put(COL_FOOD_CATEGORY, category)
+        cv.put(COL_FOOD_PHOTO, bArray)
+
+        val result = db.update(TABLE_FOOD, cv, "$COL_FOOD_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
     }
     fun readFoodData() : MutableList<Food>{
         val list : MutableList<Food> = ArrayList()
@@ -370,6 +390,8 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                 val food = Food()
                 food.id = result.getString(result.getColumnIndex(COL_FOOD_ID)).toInt()
                 food.name = result.getString(result.getColumnIndex(COL_FOOD_NAME))
+                food.quantity = result.getString(result.getColumnIndex(COL_FOOD_QUANTITY)).toDouble()
+                food.measurement = result.getString(result.getColumnIndex(COL_FOOD_MEASUREMENT))
                 list.add(food)
             }while (result.moveToNext())
         }
@@ -458,7 +480,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         newG.convert()
         val newqty : Double = oldG.quantity - newG.quantity
         val resultQty = Measurements(newqty, "grams", m)
-        val convert = resultQty.convert()
+        resultQty.convert()
 
         return resultQty.quantity >= 0.0
     }
@@ -630,8 +652,15 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                 var found = false
                 for (x in 0..(cupboard.size-1)){
                     if (ingredients.foodID == cupboard[x].id){
-                        if(checkDelFoodQuantity(ingredients.foodID, ingredients.quantity, ingredients.measurement)) {
+                        val msr = Measurements(cupboard[x].quantity,cupboard[x].measurement,ingredients.measurement)
+                        msr.convert()
+                        val new = msr.quantity - ingredients.quantity
+                        if(new >= 0.0) {
                             found = true
+                            break
+                        }
+                        else{
+                            found = false
                             break
                         }
                     }
@@ -770,7 +799,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val query = "SELECT * FROM " + TABLE_BARCODE + " WHERE " +
                 COL_BARCODE_BARCODE + " = ?"
 
-        db.rawQuery(query, arrayOf(barcode.toString())).use{
+        db.rawQuery(query, arrayOf(barcode)).use{
             if(it.count > 0)
                 return true
         }

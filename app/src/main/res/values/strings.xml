@@ -18,4 +18,5 @@
     <string name="title_activity_cookbook">CookbookActivity</string>
     <string name="title_activity_recipe_item">RecipeItemActivity</string>
     <string name="title_activity_add_recipe">AddRecipeActivity</string>
+    <string name="title_activity_edit_food">EditFoodActivity</string>
 </resources>

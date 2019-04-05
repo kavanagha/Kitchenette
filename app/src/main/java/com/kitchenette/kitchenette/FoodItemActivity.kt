@@ -90,8 +90,13 @@ class FoodItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
         }
 
-        addCupboard.setOnClickListener {
+        edit_button.setOnClickListener {
+            val intent = Intent(this@FoodItemActivity, EditFoodActivity::class.java)
+            intent.putExtra("food", foodMessage)
+            startActivity(intent)
+        }
 
+        addCupboard.setOnClickListener {
             val window = PopupWindow(context)
             val view = layoutInflater.inflate(R.layout.popup_add_quantity,null)
 
