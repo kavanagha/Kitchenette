@@ -89,7 +89,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         val db = this.writableDatabase
 
         val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos)
         val bArray = bos.toByteArray()
 
         val cv = ContentValues()
@@ -542,8 +542,7 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
                      mealType:String, bitmap: Bitmap, servings: Int, id:Int){
         val db = this.writableDatabase
         val bos = ByteArrayOutputStream()
-
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos)
         val bArray = bos.toByteArray()
         val cv = ContentValues()
 
@@ -745,6 +744,26 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         db.close()
         return null
     }
+    fun updateIngredient(id: Int, qty: Double, msr:String){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put(COL_INGREDIENT_QUANTITY, qty)
+        cv.put(COL_INGREDIENT_MEASUREMENT, msr)
+
+        val result = db.update(TABLE_INGREDIENT, cv, "$COL_INGREDIENT_ID = $id", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun removeIngredient(id:Int){
+        this.writableDatabase.apply {
+            delete(TABLE_INGREDIENT, "$COL_INGREDIENT_ID = $id", null)
+            close()
+        }
+    }
 
     fun removeQuantityCupboard(iId:Int, fId:Int){
         val db = this.readableDatabase
@@ -766,17 +785,31 @@ class DataBaseHandler (var context: Context) : SQLiteAssetHelper(context, DATABA
         cv.put(COL_DIET_RECIPE, diet.recipeID)
 
         db.insert(TABLE_DIET, null, cv)
+        db.close()
     }
-    fun findDietName(fId:Int) : String?{
+    fun findDietName(rId:Int) : String?{
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_DIET WHERE $COL_DIET_RECIPE = ?"
-        db.rawQuery(query, arrayOf(fId.toString())).use{
+        db.rawQuery(query, arrayOf(rId.toString())).use{
             if (it.moveToFirst()){
                 return it.getString(it.getColumnIndex(COL_DIET_NAME))
             }
         }
         db.close()
         return null
+    }
+    fun updateDiet(name:String, rId : Int){
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put(COL_DIET_NAME, name)
+
+        val result = db.update(TABLE_DIET, cv, "$COL_DIET_RECIPE = $rId", null)
+        if(result >=1 ) {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /************************** BARCODE TABLE **************************************/

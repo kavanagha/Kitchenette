@@ -54,9 +54,17 @@ class EditRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         method.setText(recipe?.method)
         servings.setText(recipe?.servings.toString())
         cuisine.setText(recipe?.cuisine)
-        val bitmap: Bitmap? = recipe?.photo
-        image.setImageBitmap(bitmap)
+        if(recipe?.photo != null){
+            bitmap = recipe.photo
+            image.setImageBitmap(bitmap)
+        }
         selected = recipe?.mealType
+        val d = db.findDietName(id.toInt())
+        diet.setText(d!!)
+
+        addIngredients(id.toInt())
+        ingredient_list.layoutManager = LinearLayoutManager(this)
+        ingredient_list.adapter = AddIngredientAdapter(ingredients, quantityList,measureList, this)
 
         /********************* FLOATING ACTION BUTTON *******************************/
         fab.setOnClickListener {
@@ -65,8 +73,42 @@ class EditRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 cuisine.text.toString().isNotEmpty() && bitmap!= null){
 
                 db.updateRecipe(name.text.toString(), method.text.toString(), cuisine.text.toString(),
-                    description.text.toString(), selected!!, bitmap, servings.text.toString().toInt(), id.toInt())
+                    description.text.toString(), selected!!, bitmap!!, servings.text.toString().toInt(), id.toInt())
+                db.updateDiet(diet.text.toString(),id.toInt())
 
+                /*********************** UPDATE INGREDIENTS *******************************/
+                val oldIngredientList = db.readIngredients(id.toInt())
+
+                for (i in 0.. (oldIngredientList.size-1)){
+                    var found = false
+                    for(j in 0..(ingredients.size-1)){
+                        if(ingredients[j].toInt() == oldIngredientList[i].foodID){
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found){
+                        db.removeIngredient(oldIngredientList[i].id)
+                    }
+                }
+
+                for (i in 0..(ingredients.size-1)) {
+                    var found = false
+                    for (j in 0.. (oldIngredientList.size-1)){
+                        if(ingredients[i].toInt() == oldIngredientList[j].foodID){
+                            db.updateIngredient(oldIngredientList[j].id, quantityList[i], measureList[i])
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found){
+                        val ing = Ingredients(id.toLong(), ingredients[i].toInt(), quantityList[i], measureList[i])
+                        db.insertIngredient(ing)
+                    }
+
+                }
+
+                /****************** OPEN RECIPE ITEM PAGE WITH UPDATED RECIPE ********************/
                 val intent = Intent(this@EditRecipeActivity, RecipeItemActivity::class.java)
                 intent.putExtra("recipe", id)
                 startActivity(intent)
@@ -88,7 +130,7 @@ class EditRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_DENIED){
                     val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    requestPermissions(permissions, AddFoodActivity.PERMISSION_CODE)
+                    requestPermissions(permissions, PERMISSION_CODE)
                 } else
                     pickImageFromGallery()
             } else
@@ -219,11 +261,21 @@ class EditRecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     private fun addFoodItems() {
         val context = this
         val db = DataBaseHandler(context)
-
         val data = db.readFoodData()
-
-        for(i in 0..(data.size-1)){
+        for(i in 0..(data.size-1))
             list.add(data[i])
+    }
+
+    private fun addIngredients(id:Int){
+        val context = this
+        val db = DataBaseHandler(context)
+        val data = db.readIngredients(id)
+
+        for(i in 0..(data.size-1)) {
+            ingredients.add(data[i].foodID.toString())
+            val ingredient = db.findIngredient(data[i].id)
+            quantityList.add(ingredient?.quantity!!)
+            measureList.add(ingredient.measurement)
         }
     }
 
